@@ -20,7 +20,6 @@ import { IDataTelemetry } from '../../interfaces/DataTelemetry';
 import { BTN } from '../../components/Button';
 import { ButtonBox, Content, ContentFuel } from './styles';
 import { FaFilter, FaPause } from 'react-icons/fa';
-import { immediateToast } from 'izitoast-react';
 
 const Telemetry: React.FC = () => {
   const [visible, setVisible] = useState(true);
