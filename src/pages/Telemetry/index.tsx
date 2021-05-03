@@ -8,6 +8,9 @@ import { CSVLink } from "react-csv";
 
 import Chart from "react-google-charts";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { ResponsiveContainer } from 'recharts';
 import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table } from '../../Styled';
@@ -49,6 +52,8 @@ const Telemetry: React.FC = () => {
   const [boxAnalysis, setBoxAnalysis] = useState(false);
   const [boxFuel, setBoxFuel] = useState(false);
   const [boxVehicle, setBoxVehicle] = useState(false);
+
+  const notify = () => toast("Não ha dados para o periodo selecionado!");
 
   const graphic = true;
 
@@ -159,6 +164,7 @@ const Telemetry: React.FC = () => {
     if (res.data) {
       setDataTelemetry(res.data);
     }
+    notify();
 
   }, [dataInitial, dataEnd, hourInitial, hourEnd]);
 
@@ -174,6 +180,7 @@ const Telemetry: React.FC = () => {
       <Container maxWidth={false} style={{ boxShadow: '0px 0px 1px 2px white' }}>
 
         <Center>
+        <ToastContainer />
           {visible &&
             (
               <SideBar>
@@ -413,7 +420,7 @@ const Telemetry: React.FC = () => {
                             ['', ''],
                             ['CONDUCCIÓN', dataTelemetry.indicators_summary?.efficient_driving_time_pctg],
                             ['RALENTÍ', dataTelemetry.indicators_summary?.idle_time_pctg],
-                            ['NO RENTABLE...', dataTelemetry.indicators_summary?.inefficient_driving_time_pctg],
+                            ['NO RENTABLE EN CONDUCCIÓN', dataTelemetry.indicators_summary?.inefficient_driving_time_pctg],
                             ['ACELERACIÓN EN VACÍO', dataTelemetry.indicators_summary?.stopped_acceleration_time_pctg],
                           ]}
                           options={{
