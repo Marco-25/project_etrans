@@ -48,7 +48,7 @@ export const SideBar = styled.div`
     p {
       color: rgba(0,0,0,0.5);
       font-size:14px;
-      margin-bottom: 5px;
+      margin: 1rem 0;
     }
 
     h5 {
@@ -136,6 +136,5 @@ export const Form = styled.form`
 
 export const Table = styled.div`
     width: 100%;
-    min-height: 200px;
-    max-height: 400px;
+    height: 400px;
 `;

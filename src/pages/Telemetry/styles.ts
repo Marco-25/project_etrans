@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+export const Toast = styled.div``
+
 export const ButtonBox = styled.button`
   flex:1;
   margin-top: 32px;

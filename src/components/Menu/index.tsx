@@ -21,7 +21,6 @@ const Menu: React.FC = () => {
                     <Link to="/kpihistoric" > <i className="fas fa-globe-americas"></i> KPIs Histórico </Link>
                     <Link to="/nota_general" > <i className="fas fa-globe-americas"></i> Nota General </Link>
                     <Link to="/nota_detallada" > <i className="fas fa-globe-americas"></i> Nota Detallada </Link>
-                    <Link to="/testes" > <i className="fas fa-globe-americas"></i> testes </Link>
                 </MenuDesktop>
             }
             <Toggle onClick={handlemenu} > <i className="fas fa-bars"></i></Toggle>

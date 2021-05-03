@@ -19,14 +19,13 @@ import Menu from '../../components/Menu';
 import { IDataTelemetry } from '../../interfaces/DataTelemetry';
 import { BTN } from '../../components/Button';
 import { ButtonBox, Content, ContentFuel } from './styles';
-import Modal from '../../components/Modal';
 import { FaFilter, FaPause } from 'react-icons/fa';
+import { immediateToast } from 'izitoast-react';
 
 const Telemetry: React.FC = () => {
   const [visible, setVisible] = useState(true);
   const [render, setRender] = useState(true);
   const [dataTelemetry, setDataTelemetry] = useState<IDataTelemetry>({} as IDataTelemetry);
-  const [modal, setModal] = useState(false);
 
   const [dataInitial, setDataInitial] = useState(String);
   const [dataEnd, setDataEnd] = useState(String);
@@ -77,10 +76,9 @@ const Telemetry: React.FC = () => {
     },
   ];
 
-  //table
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'fuel_rate_kms_per_lts', headerName: 'rendiemento(Km/L)', width: 170 },
+    { field: 'fuel_rate_kms_per_lts', headerName: 'rendiemento(Km/L)', width: 170},
     { field: 'fuel_rate_lts_per_hrs', headerName: 'rendiemento(L/Hr)', width: 170 },
     { field: 'total_distance_kms', headerName: 'Distancia recorrida(Km)', width: 210 },
     { field: 'total_fuel_consumption_lts', headerName: 'Consumo Total(L)', width: 170 },
@@ -93,22 +91,23 @@ const Telemetry: React.FC = () => {
     { field: 'qty_trips', headerName: 'Número de viajes', width: 170 },
   ];
 
-  const rows = [
-    {
-      id: dataTelemetry.indicators_by_vehicle?.map(s => s.vehicle_id && s.vehicle_id),
-      fuel_rate_kms_per_lts: dataTelemetry.indicators_by_vehicle?.map(s => s.fuel_rate_kms_per_lts && s.fuel_rate_kms_per_lts.toFixed(2)),
-      fuel_rate_lts_per_hrs: dataTelemetry.indicators_by_vehicle?.map(s => s.fuel_rate_lts_per_hrs && s.fuel_rate_lts_per_hrs.toFixed(2)),
-      total_distance_kms: dataTelemetry.indicators_by_vehicle?.map(s => s.total_distance_kms && s.total_distance_kms.toFixed(2)),
-      total_fuel_consumption_lts: dataTelemetry.indicators_by_vehicle?.map(s => s.total_fuel_consumption_lts && s.total_fuel_consumption_lts.toFixed(2)),
-      total_time_hrs: dataTelemetry.indicators_by_vehicle?.map(s => s.total_time_hrs && s.total_time_hrs.toFixed(2)),
-      idle_time_pctg: dataTelemetry.indicators_by_vehicle?.map(s => s.idle_time_pctg && s.idle_time_pctg.toFixed(2)),
-      stopped_acceleration_time_pctg: dataTelemetry.indicators_by_vehicle?.map(s => s.stopped_acceleration_time_pctg && s.stopped_acceleration_time_pctg.toFixed(2)),
-      average_speed_kmh: dataTelemetry.indicators_by_vehicle?.map(s => s.average_speed_kmh && s.average_speed_kmh.toFixed(2)),
-      engine_brake_usage_distance_pctg: dataTelemetry.indicators_by_vehicle?.map(s => s.engine_brake_usage_distance_pctg && s.engine_brake_usage_distance_pctg.toFixed(2)),
-      service_brake_usage_distance_pctg: dataTelemetry.indicators_by_vehicle?.map(s => s.service_brake_usage_distance_pctg && s.service_brake_usage_distance_pctg.toFixed(2)),
-      qty_trips: dataTelemetry.indicators_by_vehicle?.map(s => s.qty_trips && s.qty_trips.toFixed(2)),
+  const rows = dataTelemetry.indicators_by_vehicle?.map((indicatorVehicle) => {
+    return {
+      id:  indicatorVehicle.vehicle_id,
+      fuel_rate_kms_per_lts: indicatorVehicle.fuel_rate_kms_per_lts?.toFixed(2) || '-',
+      fuel_rate_lts_per_hrs: indicatorVehicle.fuel_rate_lts_per_hrs?.toFixed(2) || '-',
+      total_distance_kms: indicatorVehicle.total_distance_kms?.toFixed(2) || '-',
+      total_fuel_consumption_lts: indicatorVehicle.total_fuel_consumption_lts?.toFixed(2) || '-',
+      total_time_hrs: indicatorVehicle.total_time_hrs?.toFixed(2) || '-',
+      idle_time_pctg: indicatorVehicle.idle_time_pctg?.toFixed(2) || '-',
+      stopped_acceleration_time_pctg: indicatorVehicle.stopped_acceleration_time_pctg?.toFixed(2) || '-',
+      average_speed_kmh: indicatorVehicle.average_speed_kmh?.toFixed(2) || '-',
+      engine_brake_usage_distance_pctg: indicatorVehicle.engine_brake_usage_distance_pctg?.toFixed(2) || '-',
+      service_brake_usage_distance_pctg: indicatorVehicle.service_brake_usage_distance_pctg?.toFixed(2) || '-',
+      qty_trips: indicatorVehicle.qty_trips?.toFixed(2)
     }
-  ];
+
+  });
 
   const getDateNow = useCallback(() => {
     let date = new Date();
@@ -161,7 +160,6 @@ const Telemetry: React.FC = () => {
     if (res.data) {
       setDataTelemetry(res.data);
     }
-    setModal(true);
 
   }, [dataInitial, dataEnd, hourInitial, hourEnd]);
 
@@ -173,7 +171,6 @@ const Telemetry: React.FC = () => {
   }, [handleApi, getDateNow, getDateLast]);
   return (
     <>
-      {modal && <Modal name="Fechar" handleFunction={() => setModal(false)} />}
       <Menu />
       <Container maxWidth={false} style={{ boxShadow: '0px 0px 1px 2px white' }}>
 
@@ -205,9 +202,9 @@ const Telemetry: React.FC = () => {
                     </Select>
                   </FormControl>
                   <FormControl >
-                    <InputLabel id="veiculos">Veiculos</InputLabel>
+                    <InputLabel id="vehicle">Veiculos</InputLabel>
                     <Select
-                      labelId="veiculos"
+                      labelId="vehicle"
                       name="vehicle"
                       onChange={(e: ChangeEvent<HTMLInputElement | any>) => console.log(e.currentTarget.value)}
                       style={{ width: '100px' }}
@@ -223,6 +220,9 @@ const Telemetry: React.FC = () => {
                   <TextField
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setDataInitial(e.target.value)}
                     type="date"
+                    variant="outlined"
+                    margin="normal"
+                    size="small"
                     defaultValue={dateNow}
                     label="Fecha de Inicio"
                     name="dateInitial"
@@ -258,6 +258,9 @@ const Telemetry: React.FC = () => {
                   <TextField
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setDataEnd(e.target.value)}
                     type="date"
+                    variant="outlined"
+                    margin="normal"
+                    size="small"
                     label="Fecha de Término*"
                     name="dateInitial"
                     InputLabelProps={{
@@ -270,6 +273,7 @@ const Telemetry: React.FC = () => {
                     type="number"
                     variant="outlined"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPriceFuel(Number(e.currentTarget.value))}
+                    defaultValue="100"
                     size="small"
                     label="Precio combustible"
                     margin="normal"
@@ -342,7 +346,7 @@ const Telemetry: React.FC = () => {
                     <BTN btnColorTwo={btnColorTwoFalse} onClick={() => {
                       setYieldTwo(dataTelemetry.indicators_summary.total_fuel_consumption_lts / 1000 * priceFuel);
                       setTextYieldL('');
-                      setTextYieldRs("R$");
+                      setTextYieldRs("$");
                       setBtnColorTwoTrue(true);
                       setBtnColorTwoFalse(false);
                     }}>$</BTN>
@@ -408,10 +412,10 @@ const Telemetry: React.FC = () => {
                           chartType="PieChart"
                           data={[
                             ['', ''],
-                            ['value', dataTelemetry.indicators_summary?.efficient_driving_time_pctg],
-                            ['value', dataTelemetry.indicators_summary?.idle_time_pctg],
-                            ['value', dataTelemetry.indicators_summary?.inefficient_driving_time_pctg],
-                            ['value', dataTelemetry.indicators_summary?.stopped_acceleration_time_pctg],
+                            ['CONDUCCIÓN', dataTelemetry.indicators_summary?.efficient_driving_time_pctg],
+                            ['RALENTÍ', dataTelemetry.indicators_summary?.idle_time_pctg],
+                            ['NO RENTABLE...', dataTelemetry.indicators_summary?.inefficient_driving_time_pctg],
+                            ['ACELERACIÓN EN VACÍO', dataTelemetry.indicators_summary?.stopped_acceleration_time_pctg],
                           ]}
                           options={{
                             backgroundColor: 'transparent',
@@ -480,7 +484,7 @@ const Telemetry: React.FC = () => {
 
                 <ButtonSearch>
                   <BiExport />
-                  <CSVLink filename={`Relarorio-${dateNow}`} data={rows}>Expotar</CSVLink>
+                  <CSVLink filename={`Relarorio-${dateNow}.csv`} data={rows}>Expotar</CSVLink>
                 </ButtonSearch>
 
               </RowButton>
