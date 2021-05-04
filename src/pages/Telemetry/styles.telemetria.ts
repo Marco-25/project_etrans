@@ -1,55 +1,5 @@
 import styled, { css } from "styled-components";
 
-interface IRowButton {
-  align?: string;
-}
-
-export const RowButton = styled.div<IRowButton>`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 8px;
-
-  ${props => props.align === 'center' && css`justify-content: center;`}
-`;
-
-export const ButtonSearch = styled.button`
-  display: flex;
-  justify-content:center;
-  align-items:center;
-
-  width: 150px;
-  height: 25px;
-  padding-top: 5px;
-  line-height:20px;
-  border: 0;
-  border-radius: 5px;
-  cursor:pointer;
-  color: white;
-  font-size: 15px;
-  background:#00a6e0;
-  text-transform:uppercase;
-
-  a {
-    display:flex;
-    align-items:center;
-
-    text-decoration:none;
-    color:#fff;
-    text-transform:uppercase;
-  }
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  svg {
-    margin-right: 5px;
-    margin-bottom: 8px;
-    font-size: 18px;
-  }
-`;
-
 interface IMidlleBox {
   bgColor?: string;
 }

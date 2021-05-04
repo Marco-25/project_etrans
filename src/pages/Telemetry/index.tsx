@@ -11,10 +11,10 @@ import Chart from "react-google-charts";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
+import { FormControl, InputLabel, Select, TextField, Typography } from '@material-ui/core';
 import { ResponsiveContainer } from 'recharts';
-import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table } from '../../Styled';
-import { Grafic, BoxGrafic, TextGrafic, MiddleBox, ButtonSearch, RowButton, ContentGraphic, BoxHeader, Header, Main, ContainerChart } from './styles.telemetria';
+import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table,ButtonSearch, RowButton, } from '../../Styled';
+import { Grafic, BoxGrafic, TextGrafic, MiddleBox, ContentGraphic, BoxHeader, Header, Main, ContainerChart } from './styles.telemetria';
 
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { api } from '../../services/api';
@@ -52,8 +52,6 @@ const Telemetry: React.FC = () => {
   const [boxAnalysis, setBoxAnalysis] = useState(false);
   const [boxFuel, setBoxFuel] = useState(false);
   const [boxVehicle, setBoxVehicle] = useState(false);
-
-  const notify = () => toast("Não ha dados para o periodo selecionado!");
 
   const graphic = true;
 
@@ -161,10 +159,10 @@ const Telemetry: React.FC = () => {
       ]
     });
 
-    if (res.data) {
-      setDataTelemetry(res.data);
-    }
-    notify();
+   if(res.data) {
+     setDataTelemetry(res.data);
+     toast.success("Dados carregados!");
+   }
 
   }, [dataInitial, dataEnd, hourInitial, hourEnd]);
 
@@ -180,7 +178,7 @@ const Telemetry: React.FC = () => {
       <Container maxWidth={false} style={{ boxShadow: '0px 0px 1px 2px white' }}>
 
         <Center>
-        <ToastContainer />
+        <ToastContainer position="top-center" />
           {visible &&
             (
               <SideBar>
@@ -192,36 +190,30 @@ const Telemetry: React.FC = () => {
                 <h5>FORMULARIO DE BÚSQUEDA</h5>
 
                 <Form onSubmit={handleSubmit}>
-                  <FormControl >
-                    <InputLabel id="cliente">Cliente</InputLabel>
-                    <Select
-                      labelId="cliente"
-                      id="cliente"
-                      style={{ width: '100px' }}
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={12345}>João Bidu</MenuItem>
-                      <MenuItem value={20}>Marco</MenuItem>
-                      <MenuItem value={30}>Lele</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl >
-                    <InputLabel id="vehicle">Veiculos</InputLabel>
-                    <Select
-                      labelId="vehicle"
-                      name="vehicle"
-                      onChange={(e: ChangeEvent<HTMLInputElement | any>) => console.log(e.currentTarget.value)}
-                      style={{ width: '100px' }}
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={867162027207018}>Cliente #1</MenuItem>
-                      <MenuItem value={867162027207851}>Cliente #2</MenuItem>
-                    </Select>
-                  </FormControl>
+                <FormControl>
+                  <InputLabel htmlFor="age-native-simple">Clientes</InputLabel>
+                  <Select
+                    native
+                    onChange={(e: ChangeEvent<HTMLInputElement | any>) => console.log(e.currentTarget.value)}
+                  >
+                    <option aria-label="None" value="" />
+                    <option value={10}>Ten</option>
+                    <option value={20}>Twenty</option>
+                    <option value={30}>Thirty</option>
+                  </Select>
+                </FormControl>
+
+                <FormControl>
+                  <InputLabel htmlFor="age-native-simple"id="vehicle">Veiculos</InputLabel>
+                  <Select
+                    native
+                    onChange={(e: ChangeEvent<HTMLInputElement | any>) => console.log(e.currentTarget.value)}
+                  >
+                    <option aria-label="None" value="" />
+                    <option value={867162027207018}>Cliente #1</option>
+                    <option value={867162027207851}>Cliente #2</option>
+                  </Select>
+                </FormControl>
 
                   <TextField
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setDataInitial(e.target.value)}

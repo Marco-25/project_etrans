@@ -3,7 +3,6 @@ import KPIsHistoric from "../pages/KPIsHistoric";
 import NoteDetails from "../pages/NoteDetails";
 import NoteGeneral from "../pages/NoteGeneral";
 import Telemetry from "../pages/Telemetry";
-import Test from "../pages/Test";
 
 const Routes: React.FC = () => {
 
@@ -13,7 +12,6 @@ const Routes: React.FC = () => {
           <Route path="/kpihistoric" component={KPIsHistoric} />
           <Route path="/nota_general" component={NoteGeneral} />
           <Route path="/nota_detallada" component={NoteDetails} />
-          <Route path="/testes" component={Test} />
 
           <Route>
              <h1>Page not found!</h1>
