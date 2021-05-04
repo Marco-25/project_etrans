@@ -122,7 +122,7 @@ export const Toggle = styled.button`
     position: absolute;
     margin-top: 0;
     top: 60px;
-    right: 39px;
+    right: 45px;
     padding: 7px;
     height: 34px;
     width: 85px;
