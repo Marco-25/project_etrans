@@ -9,7 +9,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Menu from '../../components/Menu';
 import { IDataTelemetry } from '../../interfaces/DataTelemetry';
 import { api } from '../../services/api';
-import { Box, Center, Form, Row, SideBar, Toggle,Table, RowButton, ButtonSearch } from '../../Styled';
+import { Box, Center, Form, Row, SideBar, Toggle,Table, RowButton, ButtonSearch, FormContainerSelect } from '../../Styled';
 import {MiddleBoxKPI, TitleKPI,Header,ContainerKPI} from './styles.kpishistoric';
 
 const KPIsHistoric: React.FC = () => {
@@ -18,9 +18,9 @@ const KPIsHistoric: React.FC = () => {
     const [conditionSearch, setConditionSearch] = useState(false);
     const [imei, setImei] = useState(String);
 
-
     const [dateInitial, setDateInitial] = useState('2021-01-01 00:00');
     const [dateEnd, setDateEnd] = useState(`2021-12-30 23:59`);
+
 
     const handleMenu = useCallback(async () => {
       setVisible(!visible);
@@ -71,7 +71,7 @@ const KPIsHistoric: React.FC = () => {
         { field: 'average_speed_kmh', headerName: 'HUELLA DE CARBONO (KGCO2)', width: 280 },
       ];
 
-    const rows = dataTelemetryKPI?.indicators_by_vehicle.map(indicatorVehicle => {
+    const rows = dataTelemetryKPI?.indicators_by_vehicle?.map(indicatorVehicle => {
       return {
         id: indicatorVehicle?.vehicle_id,
         fuel_rate_kms_per_lts: indicatorVehicle.fuel_rate_kms_per_lts.toFixed(2),
@@ -101,6 +101,7 @@ const KPIsHistoric: React.FC = () => {
                 <h5>FORMULARIO DE BÚSQUEDA</h5>
 
                 <Form onSubmit={handleSubmit}>
+                  <FormContainerSelect>
                 <FormControl>
                   <InputLabel htmlFor="age-native-simple">Clientes</InputLabel>
                   <Select
@@ -125,7 +126,9 @@ const KPIsHistoric: React.FC = () => {
                     <option value={867162027207851}>veiculo #2</option>
                   </Select>
                 </FormControl>
+                </FormContainerSelect>
 
+                <FormContainerSelect>
                   <TextField
                     id="datetime-local"
                     label="Fecha de Inicio"
@@ -147,6 +150,7 @@ const KPIsHistoric: React.FC = () => {
                       shrink: true,
                     }}
                   />
+                  </FormContainerSelect>
 
                   <RowButton>
                     <ButtonSearch>buscar</ButtonSearch>

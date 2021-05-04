@@ -30,10 +30,12 @@ export const Row = styled.div`
 export const SideBar = styled.div`
     margin: 0.7rem;
     width: 25%;
-    max-height: 90vh;
+    height: 90vh;
     background-color: white;
     border-radius: 2px;
     border-right: 1px solid #cccccc;
+    display:flex;
+    flex-direction:column;
 
     h4 {
       display:flex;
@@ -134,12 +136,18 @@ export const Toggle = styled.button`
     cursor: pointer;
 `;
 
-export const Form = styled.form`
+interface IScreenKpi {
+  isHeight70?: boolean;
+}
+
+export const Form = styled.form<IScreenKpi>`
     display:flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 80%;
-    height: 70%;
+    height: 50%;
+
+    ${props => props.isHeight70 && css` height: 70%;`}
 `;
 
 export const Table = styled.div`
@@ -195,4 +203,11 @@ export const ButtonSearch = styled.button`
     margin-bottom: 8px;
     font-size: 18px;
   }
+`;
+
+export const FormContainerSelect = styled.div`
+  height:130px;
+  display:flex;
+  justify-content:space-between;
+  flex-direction:column;
 `;

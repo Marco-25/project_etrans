@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { FormControl, InputLabel, Select, TextField, Typography } from '@material-ui/core';
 import { ResponsiveContainer } from 'recharts';
-import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table,ButtonSearch, RowButton, } from '../../Styled';
+import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table,ButtonSearch, RowButton,FormContainerSelect } from '../../Styled';
 import { Grafic, BoxGrafic, TextGrafic, MiddleBox, ContentGraphic, BoxHeader, Header, Main, ContainerChart } from './styles.telemetria';
 
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
@@ -29,12 +29,8 @@ const Telemetry: React.FC = () => {
   const [render, setRender] = useState(true);
   const [dataTelemetry, setDataTelemetry] = useState<IDataTelemetry>({} as IDataTelemetry);
 
-  const [dataInitial, setDataInitial] = useState(String);
-  const [dataEnd, setDataEnd] = useState(String);
-  const [dateNow, setDateNow] = useState(String);
-
-  const [hourInitial, setHourInitial] = useState('04:00:00');
-  const [hourEnd, setHourEnd] = useState('14:08:19');
+  const [dateInitial, setDateInitial] = useState('2021-01-01 00:00');
+  const [dateEnd, setDateEnd] = useState(`2021-12-30 23:59`);
 
   const [priceFuel, setPriceFuel] = useState(100);
 
@@ -113,7 +109,6 @@ const Telemetry: React.FC = () => {
 
   const getDateNow = useCallback(() => {
     let date = new Date();
-    setDateNow(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
   }, []);
 
@@ -151,8 +146,8 @@ const Telemetry: React.FC = () => {
     e.preventDefault();
 
     const res = await api.post('/indicators', {
-      "from_timestamp": `${dataInitial} ${hourInitial}`,
-      "to_timestamp": `${dataEnd} ${hourEnd}`,
+      "from_timestamp": `${dateInitial}`,
+      "to_timestamp": `${dateEnd}`,
       "imei": [
         "867162027207018",
         "867162027207851"
@@ -164,7 +159,7 @@ const Telemetry: React.FC = () => {
      toast.success("Dados carregados!");
    }
 
-  }, [dataInitial, dataEnd, hourInitial, hourEnd]);
+  }, [dateInitial, dateEnd]);
 
   useEffect(() => {
     getDateNow()
@@ -189,7 +184,8 @@ const Telemetry: React.FC = () => {
 
                 <h5>FORMULARIO DE BÚSQUEDA</h5>
 
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} isHeight70>
+                  <FormContainerSelect>
                 <FormControl>
                   <InputLabel htmlFor="age-native-simple">Clientes</InputLabel>
                   <Select
@@ -214,57 +210,28 @@ const Telemetry: React.FC = () => {
                     <option value={867162027207851}>Cliente #2</option>
                   </Select>
                 </FormControl>
-
-                  <TextField
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setDataInitial(e.target.value)}
-                    type="date"
-                    variant="outlined"
-                    margin="normal"
-                    size="small"
-                    defaultValue={dateNow}
+                </FormContainerSelect>
+                <TextField
+                    id="datetime-local"
                     label="Fecha de Inicio"
-                    name="dateInitial"
+                    type="datetime-local"
+                    onChange={(e:ChangeEvent<HTMLInputElement>) => setDateInitial(e.currentTarget.value.replace('T',' '))}
+                    defaultValue="2021-05-24T10:30"
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    required />
-
-                  <TextField
-                    margin="normal"
-                    variant="outlined"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setHourInitial(e.currentTarget.value)}
-                    size="small"
-                    id="time"
-                    label="Hora de Inicio"
-                    type="time"
-                    defaultValue="00:00"
-                    fullWidth
                   />
 
                   <TextField
-                    margin="normal"
-                    variant="outlined"
-                    size="small"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setHourEnd(e.target.value)}
-                    id="time"
-                    label="Hora de término"
-                    type="time"
-                    defaultValue="23:59"
-                    fullWidth
-                  />
-
-                  <TextField
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setDataEnd(e.target.value)}
-                    type="date"
-                    variant="outlined"
-                    margin="normal"
-                    size="small"
-                    label="Fecha de Término*"
-                    name="dateInitial"
+                    id="datetime-local"
+                    label="Fecha de Término"
+                    type="datetime-local"
+                    onChange={(e:ChangeEvent<HTMLInputElement>) => setDateEnd(e.currentTarget.value.replace('T',' '))}
+                    defaultValue="2021-12-31T10:30"
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    required />
+                  />
 
 
                   <TextField
@@ -482,7 +449,7 @@ const Telemetry: React.FC = () => {
 
                 <ButtonSearch>
                   <BiExport />
-                  <CSVLink filename={`Relarorio-${dateNow}.csv`} data={rows}>Expotar</CSVLink>
+                  <CSVLink filename={`Relarorio-${getDateNow()}.csv`} data={rows}>Expotar</CSVLink>
                 </ButtonSearch>
 
               </RowButton>
