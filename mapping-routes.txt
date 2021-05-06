@@ -1,0 +1,39 @@
+#PAGE NOTA GENERAL
+#PAGE NOTA DETALLADA
+https://api.copiloto.ai/scores/v1/ranking/vehicles ----- post
+{
+	"from_timestamp": "2021-04-28 04:00:00",
+	"search_list": ["867162026821918"],
+	"#_ranking": 5,
+	"score_type": "fuel | general | security | conditions | brakes | ", opciconal?
+	"to_timestamp": "2021-05-06 00:49:43"
+}
+*************************************************************************
+https://api.copiloto.ai/scores/v1/general/drivers ----- post
+{
+	"#_ranking": 5
+    "from_timestamp": "2021-04-28 04:00:00"
+    "score_type": "fuel"
+    "search_list": ["842", "843", "844", "879"],
+    "score_type": "fuel | general | security | conditions | brakes | ", opciconal?
+    "to_timestamp": "2021-05-06 03:59:59"
+}
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+
+#Page telemetria KPI
+Router gets 
+https://api.copiloto.ai/kpi/v1/history/odometer?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59 
+
+https://api.copiloto.ai/kpi/v1/history/horometer?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
+
+https://api.copiloto.ai/kpi/v1/history/odoliter?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
+
+Route post ( sessão do usuario )
+https://api.raygun.io/events?apikey=uDpSCDTLl123TT9YqabeEA
+
+
+
+
+
+
+
