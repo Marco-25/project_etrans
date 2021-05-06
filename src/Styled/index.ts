@@ -126,7 +126,7 @@ export const Toggle = styled.button`
     top: 60px;
     right: 45px;
     padding: 7px;
-    height: 34px;
+    height: 30px;
     width: 85px;
     border: 0;
     border-radius: 7px;
