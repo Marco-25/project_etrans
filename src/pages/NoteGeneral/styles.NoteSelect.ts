@@ -1,43 +1,64 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const MiddleBoxNoteSelect = styled.div`
-    flex-direction: column;
-    justify-content: center;
-    justify-items: center;
-    align-items:center;
-   
-    width:25%;
-    height: 100px;
-    margin: 0.5rem;
-    padding: 0 0.5rem;
+export const Header = styled.header`
+    width: 100%;
+    margin-bottom: 2rem;
     display: flex;
-  
-    border-radius: 5px;
-    background-color: rgb(39, 111, 139);
-    color:white;
+    justify-content:space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+`;
 
-    p + p {
-      margin-top: 0.3rem;
-    }
+interface IPropsBoxNoteSelect {
+  bgColor?: string;
+  color?: string;
+}
+export const MiddleBoxNoteSelect = styled.div<IPropsBoxNoteSelect>`
+  width: 19.5%;
+  height: 100%;
+  padding:0.5rem;
+  border-radius: 5px;
+  color: #fff;
+  text-align:center;
+  display: grid;
+  grid-template-columns: repeat(1, auto );
+  grid-template-rows: repeat(3, 1.2rem  );
+  background-color: #276f8b;
 
-    p:nth-child(1) {
-      font-size: 16px;
-    }
+  ${props => props.bgColor === 'lightblue' && css`background-color: #5e97ae;`}
+  ${props => props.bgColor === 'darkblue' && css`background-color: #17343c;`}
 
-    p:nth-child(2) {
-      font-size: 25px;
-      font-weight: 700;
-    }
+  h5 {
+    font-size: 0.9em;
+    font-weight: normal;
+  }
 
-    p:nth-child(3) {
-      font-size: 13px;
+  h4 {
+    font-size: 1.3em;
+  }
 
-      i {
-        color: #f61313;
-        margin-right: 0.3rem;
-      }
-    }
-    
+ p {
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  font-size: 0.7em;
+
+   svg {
+    margin-right: 0.3em;
+    font-size: 1.5em;
+   }
+ }
+
+  @media screen and (max-width: 1024px) {
+    width: 49.5%;
+    max-height: 30%;
+    margin-bottom: 5px;
+  }
+
+  @media screen and (max-width: 760px) {
+    width: 100%;
+    max-height: 19%;
+  }
 `;
 
 export const TitleNote = styled.h3`
@@ -64,9 +85,29 @@ export const LittleBox = styled.a`
     position: relative;
 `;
 
+export const ContainerList = styled.div`
+  display:flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+`;
+
 export const Note = styled.div`
-  flex: 1;
-  /* border: 1px solid black; */
+  width: 49.9%;
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  @media screen and (max-width: 760px) {
+    width: 100%;
+    max-height: 19%;
+  }
 
   h4 {
     background: #f5f5f5;
@@ -95,14 +136,8 @@ export const Note = styled.div`
 
       p {
 
-        i.red {
-          color: red;
-          font-size: 15px;
-        }
-
-        i.green {
+        svg {
           color: #00c853;
-          font-size: 15px;
         }
       }
     }

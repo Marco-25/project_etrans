@@ -63,7 +63,7 @@ export interface IDataTelemetry {
     },
     indicators_by_vehicle: [
        {
-        imei: string;
+        imei: string | number;
         status: number;
         vehicle_id: number;
         has_odoliter: boolean;

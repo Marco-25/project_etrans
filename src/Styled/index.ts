@@ -206,7 +206,7 @@ export const ButtonSearch = styled.button`
 `;
 
 export const FormContainerSelect = styled.div`
-  height:130px;
+  height:180px;
   display:flex;
   justify-content:space-between;
   flex-direction:column;

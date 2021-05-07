@@ -1,4 +1,5 @@
 import { Container, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
+import {v4 as uuid} from 'uuid'
 import { DataGrid } from '@material-ui/data-grid';
 import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
@@ -7,20 +8,26 @@ import { FaFilter } from 'react-icons/fa';
 import { IoMdInformationCircle } from 'react-icons/io';
 import { toast, ToastContainer } from 'react-toastify';
 import Menu from '../../components/Menu';
-import { IDataTelemetry } from '../../interfaces/DataTelemetry';
-import { api } from '../../services/api';
+import { IHorometer } from '../../interfaces/IHorometer';
+import { IOdoliter } from '../../interfaces/IOdoliter';
+import { IOdometer } from '../../interfaces/IOdometer';
+import { apiTelemetryKPI } from '../../services/api';
 import { Box, Center, Form, Row, SideBar, Toggle, Table, RowButton, ButtonSearch, FormContainerSelect } from '../../Styled';
 import { MiddleBoxKPI, TitleKPI, Header, ContainerKPI } from './styles.kpishistoric';
 
 const KPIsHistoric: React.FC = () => {
   const [visible, setVisible] = useState(true);
-  const [dataTelemetryKPI, setDataTelemetryKPI] = useState<IDataTelemetry>({} as IDataTelemetry);
+  const [horometer, setHorometer] = useState<IHorometer[]>([]);
+  const [odometer, setOdometer] = useState<IOdometer[]>([]);
+  const [odoliter, setOdoliter] = useState<IOdoliter[]>([]);
+
   const [conditionSearch, setConditionSearch] = useState(false);
+
   const [imei, setImei] = useState(String);
+  const [dateInitial, setDateInitial] = useState('');
+  const [dateEnd, setDateEnd] = useState('');
 
-  const [dateInitial, setDateInitial] = useState('2021-01-01 00:00');
-  const [dateEnd, setDateEnd] = useState(`2021-12-30 23:59`);
-
+  const [rows, setRows] = useState<any[]>([]);
 
   const handleMenu = useCallback(async () => {
     setVisible(!visible);
@@ -38,50 +45,74 @@ const KPIsHistoric: React.FC = () => {
       toast.info("Infome um veiculo");
       return;
     }
+    if (!dateInitial) {
+      toast.info("informe uma data de inicio");
+      return;
+    }
+    if (!dateEnd) {
+      toast.info("informe uma data de fim");
+      return;
+    }
 
-    const res = await api.post('/indicators', {
-      "from_timestamp": `${dateInitial}`,
-      "to_timestamp": `${dateEnd}`,
-      "imei": [`${imei}`]
-    });
+    const odometer = await apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`,{} );
+    const horometer = await apiTelemetryKPI.get(`/horometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`,{} );
+    const odoliter = await apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`,{} );
+    setHorometer(horometer.data.measurements);
+    setOdometer(odometer.data.measurements);
+    setOdoliter(odoliter.data.measurements);
+
+    console.log(horometer);
+    console.log(odometer);
+    console.log(odoliter);
 
     setConditionSearch(true);
-    setDataTelemetryKPI(res.data);
 
     toast.success("Dados carregados!");
 
   }, [dateInitial, dateEnd, imei]);
 
-  useEffect(() => {
-    getDateNow();
-  }, [getDateNow]);
-
   //table
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'fuel_rate_kms_per_lts', headerName: 'FECHA', width: 120 },
-    { field: 'fuel_rate_lts_per_hrs', headerName: 'HORÓMETRO', width: 150 },
-    { field: 'total_distance_kms', headerName: 'ODÓMETRO', width: 150 },
-    { field: 'total_fuel_consumption_lts', headerName: 'ODOLITRO', width: 140 },
-    { field: 'total_time_hrs', headerName: 'HORAS EN OPERACIÓN (H)', width: 250 },
-    { field: 'idle_time_pctg', headerName: 'DISTANCIA RECORRIDA (KM)', width: 250 },
-    { field: 'stopped_acceleration_time_pctg', headerName: 'LITROS CONSUMIDOS (L)', width: 230 },
-    { field: 'average_speed_kmh', headerName: 'HUELLA DE CARBONO (KGCO2)', width: 280 },
+    { field: 'date_time', headerName: 'FECHA', width: 120 }, //horometer
+    { field: 'operating_time_hrs', headerName: 'HORÓMETRO', width: 150 }, //horometer
+    { field: 'end_odometer_kms', headerName: 'ODÓMETRO', width: 150 },// odometer
+    { field: 'end_odoliter_lts', headerName: 'ODOLITRO', width: 140 }, // odoliter
+    // { field: 'total_time_hrs', headerName: 'HORAS EN OPERACIÓN (H)', width: 250 },
+    // { field: 'idle_time_pctg', headerName: 'DISTANCIA RECORRIDA (KM)', width: 250 },
+    // { field: 'stopped_acceleration_time_pctg', headerName: 'LITROS CONSUMIDOS (L)', width: 230 },
+    // { field: 'average_speed_kmh', headerName: 'HUELLA DE CARBONO (KGCO2)', width: 280 },
   ];
 
-  const rows = dataTelemetryKPI?.indicators_by_vehicle?.map(indicatorVehicle => {
+  const rowHorometer = horometer.map(horometer => {
     return {
-      id: indicatorVehicle.vehicle_id,
-      fuel_rate_kms_per_lts: indicatorVehicle.fuel_rate_kms_per_lts?.toFixed(2),
-      fuel_rate_lts_per_hrs: indicatorVehicle.fuel_rate_lts_per_hrs?.toFixed(2),
-      total_distance_kms: indicatorVehicle.total_distance_kms?.toFixed(2),
-      total_fuel_consumption_lts: indicatorVehicle.total_fuel_consumption_lts?.toFixed(2),
-      total_time_hrs: indicatorVehicle.total_time_hrs?.toFixed(2),
-      idle_time_pctg: indicatorVehicle.idle_time_pctg?.toFixed(2),
-      stopped_acceleration_time_pctg: indicatorVehicle.stopped_acceleration_time_pctg?.toFixed(2),
-      average_speed_kmh: indicatorVehicle.average_speed_kmh?.toFixed(2),
+      id: uuid(),
+      date_time: horometer.date_time && horometer.date_time,
+      operating_time_hrs: horometer.operating_time_hrs && horometer.operating_time_hrs.toFixed(2),
+
     }
   });
+
+  const rowOdometer = odometer.map(odometer => {
+    return {
+      end_odometer_kms: odometer.end_odometer_kms && odometer.end_odometer_kms.toFixed(2),
+
+    }
+  });
+
+  const rowOdoliter = odoliter.map(odoliter => {
+    return {
+      end_odoliter_lts: odoliter?.end_odoliter_lts && odoliter?.end_odoliter_lts.toFixed(2),
+    }
+  });
+
+
+  useEffect(() => {
+    console.log(rowOdometer);
+    console.log(rowOdoliter);
+    setRows([])
+    getDateNow();
+  }, [getDateNow,rowOdometer,rowOdoliter]);
 
   return (
     <>
@@ -132,7 +163,6 @@ const KPIsHistoric: React.FC = () => {
                     label="Fecha de Inicio"
                     type="datetime-local"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setDateInitial(e.currentTarget.value.replace('T', ' '))}
-                    defaultValue="2021-05-24T10:30"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -143,7 +173,7 @@ const KPIsHistoric: React.FC = () => {
                     label="Fecha de Término"
                     type="datetime-local"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setDateEnd(e.currentTarget.value.replace('T', ' '))}
-                    defaultValue="2021-12-31T10:30"
+                    defaultValue
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -192,14 +222,14 @@ const KPIsHistoric: React.FC = () => {
 
               <Table style={{ height: '600px' }}>
                 {rows &&
-                  <DataGrid rows={rows} columns={columns} pageSize={10} />
+                  <DataGrid rows={rowHorometer} columns={columns} pageSize={10} />
                 }
               </Table>
               <br />
               <RowButton align="center">
                 <ButtonSearch>
                   <BiExport />
-                  <CSVLink filename={`Relatorio-${getDateNow()}.csv`} data={rows || [{}]}>Expotar</CSVLink>
+                  <CSVLink filename={`Relatorio-${getDateNow()}.csv`} data={rowHorometer || [{}]}>Expotar</CSVLink>
                 </ButtonSearch>
               </RowButton>
 

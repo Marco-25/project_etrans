@@ -1,6 +1,7 @@
 #PAGE NOTA GENERAL
 #PAGE NOTA DETALLADA
-https://api.copiloto.ai/scores/v1/ranking/vehicles ----- post
+ ----- post ------
+https://api.copiloto.ai/scores/v1/ranking/vehicles
 {
 	"from_timestamp": "2021-04-28 04:00:00",
 	"search_list": ["867162026821918"],
@@ -8,8 +9,16 @@ https://api.copiloto.ai/scores/v1/ranking/vehicles ----- post
 	"score_type": "fuel | general | security | conditions | brakes | ", opciconal?
 	"to_timestamp": "2021-05-06 00:49:43"
 }
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+https://api.copiloto.ai/scores/v1/general/vehicles
+{
+	"from_timestamp": "2021-04-28 04:00:00",
+	"search_list": ["867162026821918"],
+	"to_timestamp": "2021-05-06 00:49:43"
+}
 *************************************************************************
-https://api.copiloto.ai/scores/v1/general/drivers ----- post
+----- post ------
+https://api.copiloto.ai/scores/v1/general/drivers
 {
 	"#_ranking": 5
     "from_timestamp": "2021-04-28 04:00:00"
@@ -21,8 +30,8 @@ https://api.copiloto.ai/scores/v1/general/drivers ----- post
 /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
 
 #Page telemetria KPI
-Router gets 
-https://api.copiloto.ai/kpi/v1/history/odometer?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59 
+Router gets
+https://api.copiloto.ai/kpi/v1/history/odometer?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
 
 https://api.copiloto.ai/kpi/v1/history/horometer?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
 

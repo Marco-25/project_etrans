@@ -19,7 +19,7 @@ import { Grafic, BoxGrafic, TextGrafic, MiddleBox, ContentGraphic, BoxHeader, He
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { api } from '../../services/api';
 import Menu from '../../components/Menu';
-import { IDataTelemetry } from '../../interfaces/DataTelemetry';
+import { IDataTelemetry } from '../../interfaces/IDataTelemetry';
 import { BTN } from '../../components/Button';
 import { ButtonBox, Content, ContentFuel } from './styles';
 import { FaFilter, FaPause } from 'react-icons/fa';
