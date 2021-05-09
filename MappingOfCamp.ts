@@ -1,3 +1,4 @@
+/*
 // average_speed_kmh = velocidad promedio
 
 // braking_analysis = vehiculos en operacion
@@ -46,5 +47,10 @@
 
 
 //grafico de velocidade (KM/H)
+*/
 
-
+// <li>
+  // <p> 1 </p> idVehiclesOrDrivers
+  // <strong> Roberto backdorf</strong> nameVehicleOrDriver
+  // <p>7.2 <IoMdArrowDropup size={18} /> </p> points|
+// </li>

@@ -15,6 +15,7 @@ export const Center = styled.div`
 
 export const Box = styled.div`
     width: 100%;
+    margin:0;
     padding: 0 1%;
     height: 90vh;
     overflow-y: auto;

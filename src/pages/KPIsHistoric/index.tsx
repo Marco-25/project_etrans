@@ -1,5 +1,5 @@
 import { Container, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid';
 import { DataGrid } from '@material-ui/data-grid';
 import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
@@ -54,9 +54,9 @@ const KPIsHistoric: React.FC = () => {
       return;
     }
 
-    const odometer = await apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`,{} );
-    const horometer = await apiTelemetryKPI.get(`/horometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`,{} );
-    const odoliter = await apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`,{} );
+    const odometer = await apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`, {});
+    const horometer = await apiTelemetryKPI.get(`/horometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`, {});
+    const odoliter = await apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`, {});
     setHorometer(horometer.data.measurements);
     setOdometer(odometer.data.measurements);
     setOdoliter(odoliter.data.measurements);
@@ -112,7 +112,7 @@ const KPIsHistoric: React.FC = () => {
     console.log(rowOdoliter);
     setRows([])
     getDateNow();
-  }, [getDateNow,rowOdometer,rowOdoliter]);
+  }, [getDateNow, rowOdometer, rowOdoliter]);
 
   return (
     <>

@@ -68,7 +68,11 @@ export const TitleNote = styled.h3`
   margin: 0.5rem;
 `;
 
-export const LittleBox = styled.a`
+
+interface IPropsLittleBox {
+  bgColor?: string;
+}
+export const LittleBox = styled.a<IPropsLittleBox>`
     width: 25%;
     margin-top: 0.5rem;
     padding: 0.5rem 0;
@@ -78,11 +82,27 @@ export const LittleBox = styled.a`
     align-items: center;
     text-transform: uppercase;
     text-decoration:none;
-    background-color: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 2px;
     color:gray;
     position: relative;
+    cursor: pointer;
+    background-color: #f5f5f5;
+
+    ${props => props.bgColor === 'default' && css`
+    background: #276f8b;
+    color:#fff;
+    `}
+
+    ${props => props.bgColor === 'general' && css`
+    background: #17343c;
+    color:#fff;
+    `}
+
+    ${props => props.bgColor === 'hard' && css`
+    background: #79a5b0;
+    color:#fff;
+    `}
 `;
 
 export const ContainerList = styled.div`
@@ -98,16 +118,6 @@ export const ContainerList = styled.div`
 
 export const Note = styled.div`
   width: 49.9%;
-
-  @media screen and (max-width: 1024px) {
-    width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  @media screen and (max-width: 760px) {
-    width: 100%;
-    max-height: 19%;
-  }
 
   h4 {
     background: #f5f5f5;
@@ -127,11 +137,12 @@ export const Note = styled.div`
       background: #ddd;
       border: 1px solid #ccc;
       padding: 2px 0.5rem;
-      font-size: 20px;
       text-transform: capitalize;
+      font-size: 1.1em;
 
       strong {
         font-weight: 500;
+        font-size: 0.85em;
       }
 
       p {
@@ -149,17 +160,27 @@ export const Note = styled.div`
       background: #f5f5f5;
       border: 1px solid #ccc;
       padding:0.4rem 0.5rem;
-      font-size: 18px;
+      font-size: 0.95em;
 
       strong {
         font-weight:normal;
       }
 
       p {
-        i{
+        svg{
           color: #f61313;
         }
       }
     }
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  @media screen and (max-width: 760px) {
+    width: 100%;
+    max-height: 19%;
   }
 `;
