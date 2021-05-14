@@ -16,5 +16,12 @@
 
 ## tela de nota General
 
+- [x] puxar dados por veiculo e renderizar
+- [x] puxar dados por motorista e renderizar
+
+## tela de nota detallada
+
+- [x] arrumar responsivo
 - [] puxar dados por veiculo e renderizar
 - [] puxar dados por motorista e renderizar
+- [] mostrar dados na tabela

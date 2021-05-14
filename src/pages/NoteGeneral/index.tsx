@@ -1,30 +1,30 @@
 import { Container, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
 import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
-import { INotaGeneral } from '../../interfaces/INotaGeneral';
-import { FaFilter, FaPause, FaTrophy } from 'react-icons/fa';
+import { INotaGeneral, IVehicleOrDriver } from '../../interfaces/INotaGeneral';
+import { FaFilter, FaTrophy } from 'react-icons/fa';
 import { IoMdArrowDropup } from 'react-icons/io';
 import { TiWarning } from 'react-icons/ti';
 import { toast, ToastContainer } from 'react-toastify';
 import Menu from '../../components/Menu';
 import { Center, Form, Row, SideBar, Toggle, Box, FormContainerSelect, RowButton, ButtonSearch } from '../../Styled';
 import { Header, MiddleBoxNoteSelect, TitleNote, LittleBox, Note, ContainerList } from './styles.NoteSelect';
-import { apiNota } from '../../services/api';
+import { apiNota, apiNotaRanking } from '../../services/api';
 
 const NoteGeneral: React.FC = () => {
   const [visible, setVisible] = useState(true);
-  const [vehicles, setVehicles] = useState<INotaGeneral>({} as INotaGeneral);
-  const [drivers, setDrivers] = useState<INotaGeneral>({} as INotaGeneral);
+  const [vehiclesOrDrivers, setVehiclesOrDrivers] = useState<INotaGeneral>({} as INotaGeneral);
+  const [searchVehicleOrDriver, setSearchVehicleOrDrive] = useState<IVehicleOrDriver>({} as IVehicleOrDriver);
+
+  const [render, setRender] = useState(true);
+  const [renderDriver, setRenderDriver] = useState(true);
 
   const [imei, setImei] = useState(String);
   const [dateInitial, setDateInitial] = useState(String);
   const [dateEnd, setDateEnd] = useState(String);
-  const [searchBy, setSearchBy] = useState(String);
 
-  const [idVehiclesOrDrivers, setIdVehiclesOrDrivers] = useState(String);
-  const [nameVehicleOrDriver, setNameVehicleOrDriver] = useState(String);
-  const [points, setPoints] = useState(String);
+  const [searchBy, setSearchBy] = useState('vehicles');
 
-  const [clickBgColorGeneral, setClickBgColorGeneral] = useState(String);
+  const [clickBgColorGeneral, setClickBgColorGeneral] = useState('general');
   const [clickBgColorDefaultOne, setClickBgColorDefaultOne] = useState(String);
   const [clickBgColorDefaultTwo, setClickBgColorDefaultTwo] = useState(String);
   const [clickBgColorDefaultThree, setClickBgColorDefaultThree] = useState(String);
@@ -38,6 +38,31 @@ const NoteGeneral: React.FC = () => {
     let date = new Date();
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
   }, []);
+
+  const handleSearchVehicle = useCallback(async(scoreType) => {
+    if (searchBy === 'vehicles') {
+      const dateLast = new Date(Date.now() - (5 * 24 * 3600000));
+      const res = await apiNotaRanking.post(`/vehicles`, {
+        "from_timestamp": `${dateInitial ? dateInitial : dateLast}`,
+        "#_ranking": 5,
+        "score_type": `${scoreType}`,
+        "search_list": [`${imei ? imei : '867162026821918'}`],
+        "to_timestamp": `${dateEnd ? dateEnd: new Date()}`,
+      });
+      setSearchVehicleOrDrive(res.data);
+    }
+
+    if (searchBy === 'drivers') {
+      const res = await apiNotaRanking.post(`/drivers`, {
+        "from_timestamp": `${dateInitial}`,
+        "#_ranking": 5,
+        "score_type": `${scoreType}`,
+        "search_list": [`${imei}`],
+        "to_timestamp": `${dateEnd}`,
+      });
+      setSearchVehicleOrDrive(res.data);
+    }
+  },[dateInitial,dateEnd,imei,searchBy]);
 
   const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
@@ -64,7 +89,7 @@ const NoteGeneral: React.FC = () => {
         "search_list": [`${imei}`],
         "to_timestamp": `${dateEnd}`
       });
-      setVehicles(res.data);
+      setVehiclesOrDrivers(res.data);
     }
 
     if (searchBy === 'drivers') {
@@ -73,18 +98,30 @@ const NoteGeneral: React.FC = () => {
         "search_list": [`${imei}`],
         "to_timestamp": `${dateEnd}`
       });
-      setDrivers(res.data);
+      setVehiclesOrDrivers(res.data);
+        if (renderDriver) {
+          handleSearchVehicle('general');
+          setRenderDriver(false);
+        }
     }
 
     toast.success("Dados carregados!");
 
-  }, [dateInitial, dateEnd, imei, searchBy]);
+  }, [dateInitial, dateEnd, imei, searchBy,handleSearchVehicle,renderDriver]);
 
   useEffect(() => {
-    getDateNow();
-    console.log(vehicles);
-    console.log(drivers);
-  }, [vehicles, drivers, getDateNow]);
+    if(render){
+      const dateLast = new Date(Date.now() - (5 * 24 * 3600000));
+      apiNota.post(`/vehicles`, {
+        "from_timestamp": `${dateLast}`,
+        "search_list": [`867162026821918`],
+        "to_timestamp": `${new Date()}`
+      }).then(res => {
+        setRender(false);
+        setVehiclesOrDrivers(res.data); });
+        handleSearchVehicle('general');
+      }
+  }, [ getDateNow,render,setSearchVehicleOrDrive,handleSearchVehicle]);
 
   return (
     <>
@@ -97,7 +134,7 @@ const NoteGeneral: React.FC = () => {
               <h4>NOTA GENERAL </h4>
               <p>
                 Nota general del comportamiento de los conductores y vehículos. Puedes consultar información hasta tres meses atrás. La última información generada estará disponible luego de 60 minutos.
-           </p>
+              </p>
 
               <h5>FORMULARIO DE BÚSQUEDA</h5>
 
@@ -120,9 +157,7 @@ const NoteGeneral: React.FC = () => {
                     <InputLabel htmlFor="age-native-simple">Buscar por</InputLabel>
                     <Select
                       native
-                      onChange={(e: ChangeEvent<HTMLInputElement | any>) => setSearchBy(e.currentTarget.value)}
-                    >
-                      <option aria-label="None" value="" />
+                      onChange={(e: ChangeEvent<HTMLInputElement | any>) => setSearchBy(e.currentTarget.value)}>
                       <option value="vehicles">vehicles</option>
                       <option value="drivers">Conductores</option>
                     </Select>
@@ -189,102 +224,75 @@ const NoteGeneral: React.FC = () => {
           <Box>
             <Row> <TitleNote> NOTA GENERAL DE LA FLOTA SELECCIONADA </TitleNote> </Row>
 
-
             <Header>
-              <MiddleBoxNoteSelect bgColor="darkblue">
-                <h5>NOTA GENERAL</h5>
-                <h4> 6.5 </h4>
-                <p> <IoMdArrowDropup /> vs. periodo anterior </p>
-              </MiddleBoxNoteSelect>
-
-              <MiddleBoxNoteSelect>
-                <h5>NOTA CONSUMO</h5>
-                <h4> 7.3 </h4>
-                <p> <IoMdArrowDropup /> vs. periodo anterior </p>
-              </MiddleBoxNoteSelect>
-
-              <MiddleBoxNoteSelect>
-                <h5>NOTA FRENOS</h5>
-                <h4> 4.1 </h4>
-                <p> <FaPause size={8} /> vs. periodo anterior </p>
-              </MiddleBoxNoteSelect>
-
-              <MiddleBoxNoteSelect>
-                <h5>NOTA SEGURIDAD</h5>
-                <h4> 7.9 </h4>
-                <p> <IoMdArrowDropup /> vs. periodo anterior </p>
-              </MiddleBoxNoteSelect>
-
-              <MiddleBoxNoteSelect bgColor="lightblue">
-                <h5>NOTA DIFICULTAD</h5>
-                <h4> 4.6 </h4>
-                <p> <IoMdArrowDropup /> vs. periodo anterior </p>
-              </MiddleBoxNoteSelect>
+              {
+                vehiclesOrDrivers.scores?.map((vehicleOrDrive, index) => {
+                  return(
+                    <MiddleBoxNoteSelect key={index}
+                    isLightBlue={(vehicleOrDrive?.score_type === 'conditions') ? 'lightblue': ''}
+                    isDarkBlue={(vehicleOrDrive?.score_type === 'general') ? 'darkblue' : ''}>
+                      <h5>{vehicleOrDrive?.score_type }</h5>
+                      <h4> {vehicleOrDrive?.last_period_grade ? vehicleOrDrive?.last_period_grade : '0.0'} </h4>
+                      <p> <IoMdArrowDropup /> vs. periodo anterior </p>
+                    </MiddleBoxNoteSelect>
+                  )
+                })
+              }
             </Header>
 
             <Row> <TitleNote> RANKING DEL PERIODO </TitleNote> </Row>
             <Row>
               <LittleBox bgColor={clickBgColorGeneral} onClick={() => {
+                handleSearchVehicle('general');
                 setClickBgColorGeneral('general');
                 setClickBgColorDefaultOne('');
                 setClickBgColorDefaultTwo('');
                 setClickBgColorDefaultThree('');
                 setClickBgColorHard('');
-                setIdVehiclesOrDrivers('123');
-                setNameVehicleOrDriver('vehicle General');
-                setPoints('7');
               }}>
                 <p> General </p>
               </LittleBox>
 
               <LittleBox bgColor={clickBgColorDefaultOne} onClick={() => {
+                handleSearchVehicle('fuel');
                 setClickBgColorGeneral('');
                 setClickBgColorDefaultOne('default');
                 setClickBgColorDefaultTwo('');
                 setClickBgColorDefaultThree('');
                 setClickBgColorHard('');
-                setIdVehiclesOrDrivers('124');
-                setNameVehicleOrDriver('vehicle Consumo')
-                setPoints('7')
               }}>
                 <p> Consumo </p>
               </LittleBox>
 
               <LittleBox bgColor={clickBgColorDefaultTwo} onClick={() => {
+                handleSearchVehicle('brakes');
                 setClickBgColorGeneral('');
                 setClickBgColorDefaultOne('');
                 setClickBgColorDefaultTwo('default');
                 setClickBgColorDefaultThree('');
                 setClickBgColorHard('');
-                setIdVehiclesOrDrivers('125');
-                setNameVehicleOrDriver('vehicle frenos')
-                setPoints('7')
               }}>
                 <p> frenos </p>
               </LittleBox>
 
               <LittleBox bgColor={clickBgColorDefaultThree} onClick={() => {
+                handleSearchVehicle('security');
                 setClickBgColorGeneral('');
                 setClickBgColorDefaultOne('');
                 setClickBgColorDefaultTwo('');
                 setClickBgColorDefaultThree('default');
                 setClickBgColorHard('');
-                setIdVehiclesOrDrivers('125');
-                setNameVehicleOrDriver('vehicle seguridad')
-                setPoints('7')
               }}>
                 <p> seguridad </p>
               </LittleBox>
 
               <LittleBox bgColor={clickBgColorHard} onClick={() => {
+                handleSearchVehicle('conditions');
                 setClickBgColorGeneral('');
                 setClickBgColorDefaultOne('');
                 setClickBgColorDefaultTwo('');
                 setClickBgColorDefaultThree('');
                 setClickBgColorHard('hard');
-                setIdVehiclesOrDrivers('126');
-                setNameVehicleOrDriver('vehicle General')
-                setPoints('7')
               }}>
                 <p> Dificultad </p>
               </LittleBox>
@@ -300,17 +308,17 @@ const NoteGeneral: React.FC = () => {
                     <p>Nota</p>
                   </span>
 
-                  <li>
-                    <p> {idVehiclesOrDrivers} </p>
-                    <strong> {nameVehicleOrDriver} </strong>
-                    <p>{points} <IoMdArrowDropup size={18} /> </p>
-                  </li>
-
-                  <li>
-                    <p> {idVehiclesOrDrivers} </p>
-                    <strong> {nameVehicleOrDriver} </strong>
-                    <p>{points} <IoMdArrowDropup size={18} /> </p>
-                  </li>
+                  {
+                    searchVehicleOrDriver.top_positions?.map(vehicleOrDriveTopPosition => {
+                      return(
+                        <li key={vehicleOrDriveTopPosition?.id}>
+                        <p> {vehicleOrDriveTopPosition?.id} </p>
+                        <strong> {vehicleOrDriveTopPosition?.current_period_grade} </strong>
+                        <p>{vehicleOrDriveTopPosition?.current_period_grade} <IoMdArrowDropup size={18} /> </p>
+                      </li>
+                      )
+                    })
+                  }
 
                 </ul>
               </Note>
@@ -327,13 +335,12 @@ const NoteGeneral: React.FC = () => {
                   <li>
                     <p> 1</p>
                     <strong> vehicles</strong>
-                    <p>{points} <IoMdArrowDropup size={18} /> </p>
+                    <p> <IoMdArrowDropup size={18} /> </p>
                   </li>
 
                 </ul>
               </Note>
             </ContainerList>
-
 
           </Box>
         </Center>

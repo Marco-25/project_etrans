@@ -13,9 +13,17 @@ export const apiNota = axios.create({
   baseURL: 'https://api.copiloto.ai/scores/v1/general' // routes[post] - vehicles | drivers
 });
 
-//[GET] https://api.copiloto.ai/kpi/v1/history/odometer  ?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
-//[GET] https://api.copiloto.ai/kpi/v1/history/horometer ?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
-//[GET] https://api.copiloto.ai/kpi/v1/history/odoliter  ?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
+export const apiNotaRanking = axios.create({
+  baseURL: 'https://api.copiloto.ai/scores/v1/ranking' // routes[post] - vehicles | drivers
+});
 
-//[POST] https://api.copiloto.ai/scores/v1/general/(vehicles/drivers)
+export const apiNotaDetails = axios.create({
+  baseURL: 'https://api.copiloto.ai/scores/v1/detailed_average' // routes[post] - vehicles | drivers
+});
+
+export const apiNotaMoreDetails = axios.create({
+  baseURL: 'https://api.copiloto.ai/scores/v1/detail' // routes[post] - vehicles | drivers
+});
+
+
 

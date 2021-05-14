@@ -1,7 +1,7 @@
 import { Container, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 import { DataGrid } from '@material-ui/data-grid';
-import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { BiExport } from 'react-icons/bi';
 import { FaFilter } from 'react-icons/fa';
@@ -53,23 +53,17 @@ const KPIsHistoric: React.FC = () => {
       toast.info("informe uma data de fim");
       return;
     }
-
-    const odometer = await apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`, {});
-    const horometer = await apiTelemetryKPI.get(`/horometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`, {});
-    const odoliter = await apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`, {});
-    setHorometer(horometer.data.measurements);
-    setOdometer(odometer.data.measurements);
-    setOdoliter(odoliter.data.measurements);
-
-    console.log(horometer);
-    console.log(odometer);
     console.log(odoliter);
-
+    console.log(odometer);
+    console.log(horometer);
+    apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res => setOdometer(res.data.measurements) );
+    apiTelemetryKPI.get(`/horometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res =>  setHorometer(res.data.measurements));
+    apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res => setOdoliter(res.data.measurements));
     setConditionSearch(true);
-
     toast.success("Dados carregados!");
+    setRows([]);
 
-  }, [dateInitial, dateEnd, imei]);
+  }, [dateInitial, dateEnd, imei, odometer,horometer,odoliter]);
 
   //table
   const columns = [
@@ -84,7 +78,7 @@ const KPIsHistoric: React.FC = () => {
     // { field: 'average_speed_kmh', headerName: 'HUELLA DE CARBONO (KGCO2)', width: 280 },
   ];
 
-  const rowHorometer = horometer.map(horometer => {
+  const rowHorometer = horometer?.map(horometer => {
     return {
       id: uuid(),
       date_time: horometer.date_time && horometer.date_time,
@@ -93,26 +87,18 @@ const KPIsHistoric: React.FC = () => {
     }
   });
 
-  const rowOdometer = odometer.map(odometer => {
-    return {
-      end_odometer_kms: odometer.end_odometer_kms && odometer.end_odometer_kms.toFixed(2),
+  // const rowOdometer = odometer?.map(odometer => {
+  //   return {
+  //     end_odometer_kms: odometer.end_odometer_kms && odometer.end_odometer_kms.toFixed(2),
 
-    }
-  });
+  //   }
+  // });
 
-  const rowOdoliter = odoliter.map(odoliter => {
-    return {
-      end_odoliter_lts: odoliter?.end_odoliter_lts && odoliter?.end_odoliter_lts.toFixed(2),
-    }
-  });
-
-
-  useEffect(() => {
-    console.log(rowOdometer);
-    console.log(rowOdoliter);
-    setRows([])
-    getDateNow();
-  }, [getDateNow, rowOdometer, rowOdoliter]);
+  // const rowOdoliter = odoliter?.map(odoliter => {
+  //   return {
+  //     end_odoliter_lts: odoliter?.end_odoliter_lts && odoliter?.end_odoliter_lts.toFixed(2),
+  //   }
+  // });
 
   return (
     <>

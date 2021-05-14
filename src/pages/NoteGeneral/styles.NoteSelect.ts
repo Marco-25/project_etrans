@@ -10,13 +10,14 @@ export const Header = styled.header`
 `;
 
 interface IPropsBoxNoteSelect {
-  bgColor?: string;
-  color?: string;
+  isDarkBlue?: string;
+  isLightBlue?: string;
 }
 export const MiddleBoxNoteSelect = styled.div<IPropsBoxNoteSelect>`
   width: 19.5%;
   height: 100%;
   padding:0.5rem;
+  border: 0;
   border-radius: 5px;
   color: #fff;
   text-align:center;
@@ -25,10 +26,11 @@ export const MiddleBoxNoteSelect = styled.div<IPropsBoxNoteSelect>`
   grid-template-rows: repeat(3, 1.2rem  );
   background-color: #276f8b;
 
-  ${props => props.bgColor === 'lightblue' && css`background-color: #5e97ae;`}
-  ${props => props.bgColor === 'darkblue' && css`background-color: #17343c;`}
+  ${props => props.isLightBlue === 'lightblue' && css`background-color: #5e97ae;`}
+  ${props => props.isDarkBlue === 'darkblue' && css`background-color: #17343c;`}
 
   h5 {
+    text-transform:uppercase;
     font-size: 0.9em;
     font-weight: normal;
   }
