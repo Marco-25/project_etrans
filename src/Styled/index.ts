@@ -212,7 +212,7 @@ export const ButtonSearch = styled.button`
 export const FormContainerSelect = styled.div`
   height:15rem;
   display:flex;
-  justify-content:space-between;
+  justify-content:space-around;
   flex-direction:column;
 `;
 
