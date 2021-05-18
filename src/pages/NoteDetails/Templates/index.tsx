@@ -22,8 +22,8 @@ export const templateSubScore = (params: ISubScore) => {
 
 export const templateAllAverageScores = (params: IAllAverageScores) => {
   return <InfoBoxIndicator key={uuid()} >
-          <h4>{params.score_type}</h4>
-          <p>{params.current_period_grade}</p>
-          <strong><i className={`fas fa-sort-${params.status} ${params.status === 'up' ? 'up': 'down'}`}></i> vs. periodo anterior</strong>
-        </InfoBoxIndicator>
+    <h4>{params.score_type}</h4>
+    <p>{params.current_period_grade}</p>
+    <strong><i className={`fas fa-sort-${params.status} ${params.status === 'up' ? 'up': 'down'}`}></i> vs. periodo anterior</strong>
+  </InfoBoxIndicator>
 };

@@ -4,7 +4,7 @@ export interface INotaDetallada {
     score_type_ranking: string;
 }
 
-interface IAllPositions {
+export interface IAllPositions {
   current_period_grade:number;
   previous_period_grade: number;
   status: string;

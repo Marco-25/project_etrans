@@ -9,7 +9,8 @@ export const Center = styled.div`
     width: 100%;
     flex-direction: row;
     background-color: #fff;
-    box-shadow: 0 0 1px 2px #cecece;
+    border-radius: 0.275rem;
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.6);
     margin-top: 0.5rem;
 `;
 
@@ -29,15 +30,17 @@ export const Row = styled.div`
 `;
 
 export const SideBar = styled.div`
-    margin: 0.7rem;
-    width: 25%;
-    height: 90vh;
+    position: absolute;
+    z-index: 99;
+    padding-top: 4rem;
+    padding-left: 2rem;
+    width: 20%;
+    height: calc(100% - 3rem);
     background-color: white;
     border-radius: 2px;
     border-right: 1px solid #cccccc;
     display:flex;
     flex-direction:column;
-
     h4 {
       display:flex;
       align-items:center;
@@ -207,8 +210,25 @@ export const ButtonSearch = styled.button`
 `;
 
 export const FormContainerSelect = styled.div`
-  height:180px;
+  height:15rem;
   display:flex;
   justify-content:space-between;
   flex-direction:column;
 `;
+
+export const Icon = styled.span`
+  i {
+    margin-left:1rem;
+    font-size: 1.4em;
+  }
+
+  i.up {
+    color: #00e676;
+    padding-right: 0.7em;
+  }
+
+  i.down {
+    color: #ff1744;
+    padding-right: 0.7em;
+  }
+`

@@ -6,7 +6,7 @@ import { IoMdArrowDropup } from 'react-icons/io';
 import { TiWarning } from 'react-icons/ti';
 import { toast, ToastContainer } from 'react-toastify';
 import Menu from '../../components/Menu';
-import { Center, Form, Row, SideBar, Toggle, Box, FormContainerSelect, RowButton, ButtonSearch } from '../../Styled';
+import { Center, Form, Row, SideBar, Toggle, Box, FormContainerSelect, RowButton, ButtonSearch, Icon } from '../../Styled';
 import { Header, MiddleBoxNoteSelect, TitleNote, LittleBox, Note, ContainerList } from './styles.NoteSelect';
 import { apiNota, apiNotaRanking } from '../../services/api';
 
@@ -127,8 +127,7 @@ const NoteGeneral: React.FC = () => {
     <>
       <ToastContainer position="top-center" />
       <Menu />
-      <Container maxWidth={false} >
-        <Center>
+
           {visible &&
             <SideBar>
               <h4>NOTA GENERAL </h4>
@@ -221,6 +220,8 @@ const NoteGeneral: React.FC = () => {
             </SideBar>
           }
           <Toggle onClick={handleMenu}> <FaFilter /> Filtros</Toggle>
+          <Container maxWidth={false} >
+        <Center>
           <Box>
             <Row> <TitleNote> NOTA GENERAL DE LA FLOTA SELECCIONADA </TitleNote> </Row>
 
@@ -233,7 +234,13 @@ const NoteGeneral: React.FC = () => {
                     isDarkBlue={(vehicleOrDrive?.score_type === 'general') ? 'darkblue' : ''}>
                       <h5>{vehicleOrDrive?.score_type }</h5>
                       <h4> {vehicleOrDrive?.last_period_grade ? vehicleOrDrive?.last_period_grade : '0.0'} </h4>
-                      <p> <IoMdArrowDropup /> vs. periodo anterior </p>
+                      <p>
+                      {vehicleOrDrive.status === 'equal' ?
+                            <> <i className="fas fa-equals"></i> &nbsp; &nbsp; &nbsp;vs. periodo anterior</>:
+                      <Icon> <i className={`fas fa-sort-${vehicleOrDrive.status}
+                      ${vehicleOrDrive.status === 'up' ? 'up': 'down'}`}></i> <span> vs. periodo anterior </span> </Icon>
+                  }
+                      </p>
                     </MiddleBoxNoteSelect>
                   )
                 })
@@ -314,7 +321,8 @@ const NoteGeneral: React.FC = () => {
                         <li key={vehicleOrDriveTopPosition?.id}>
                         <p> {vehicleOrDriveTopPosition?.id} </p>
                         <strong> {vehicleOrDriveTopPosition?.current_period_grade} </strong>
-                        <p>{vehicleOrDriveTopPosition?.current_period_grade} <IoMdArrowDropup size={18} /> </p>
+                        <p>{vehicleOrDriveTopPosition?.current_period_grade}
+                        <i className={`fas fa-sort-${vehicleOrDriveTopPosition.status}`}></i> </p>
                       </li>
                       )
                     })

@@ -1,15 +1,22 @@
 import {Container, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
 import React, {  ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
 import { toast, ToastContainer } from 'react-toastify';
 
 import Menu from '../../components/Menu';
 import {  INotaDetallada } from '../../interfaces/INotaDetallada';
-import { INotaDetalladaWithIndicators } from '../../interfaces/INotaDetalladaWithIndicators';
+import {  INotaDetalladaWithIndicators } from '../../interfaces/INotaDetalladaWithIndicators';
 import {  apiNota, apiNotaDetails, apiNotaMoreDetails,} from '../../services/api';
-import { Box, ButtonSearch, Center,  Form,  FormContainerSelect,  Row,RowButton,SideBar,Table,Toggle } from '../../Styled';
-import {Line,Indicators, InfoBoxContainer, LineFix,LittleBox} from './styles';
+import { Box, ButtonSearch, Center,  Form,  FormContainerSelect,  Row,RowButton,SideBar,Toggle,Icon } from '../../Styled';
+import {Line,Indicators, InfoBoxContainer, LineFix,LittleBox,Title} from './styles';
 import { templateAllAverageScores, templateDetailsIndicator, templateSubScore } from './Templates';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 const NoteDetails: React.FC = () => {
   const [visible, setVisible] = useState(true);
@@ -24,7 +31,6 @@ const NoteDetails: React.FC = () => {
 
   const [renderNumber, setRenderNumber] = useState<number>(0);
 
-  const [render, setRender] = useState(true);
   const [renderDriver, setRenderDriver] = useState(true);
 
   const [imei, setImei] = useState(String);
@@ -32,6 +38,33 @@ const NoteDetails: React.FC = () => {
   const [dateEnd, setDateEnd] = useState(String);
 
   const [searchBy, setSearchBy] = useState('vehicles');
+
+  const names = ['GENERAL','CONSUMO', 'FRENOS','SECURIDAD','DIFICULDAD'];
+
+ function createColumns( score_type:string,current_period_grade:number,status:string,previous_period_grade:number, any?: any){
+  return {score_type,current_period_grade,status,previous_period_grade,any};
+ }
+
+const rowsIndicator = indicatorsVehiclesOrDrivers.all_average_scores?.map(details => details.map(e => (
+    createColumns(
+      e.score_type,
+      e.current_period_grade,
+      e.status,
+      e.previous_period_grade
+)
+  )) ) ;
+
+  const rows =   VehiclesOrDrivers.all_positions?.map((details) => (
+    details.details[renderNumber].subscores.map(e => (
+    createColumns(
+          e.subscore_name,
+          e.average_grade,
+          e.status,
+          e.last_period_grade
+      ) )
+      )
+  )
+  );
 
 
   // const getDateNow = useCallback(() => {
@@ -116,7 +149,6 @@ const NoteDetails: React.FC = () => {
   }, [dateInitial, dateEnd, imei, searchBy,renderDriver]);
 
   useEffect(() => {
-    if(render){
       const dateLast = new Date(Date.now() - (5 * 24 * 3600000));
       apiNotaDetails.post(`/vehicles`, {
         "from_timestamp": `${dateLast}`,
@@ -135,16 +167,11 @@ const NoteDetails: React.FC = () => {
         }).then(res => {
           setVehiclesOrDrivers(res.data);
          });
-        setRender(false);
-      }
-  }, [render]);
+  }, []);
 
   return (
     <>
       <Menu />
-      <Container maxWidth={false} >
-        <ToastContainer position="top-center" />
-        <Center>
         {visible &&
             <SideBar>
               <h4>NOTA GENERAL </h4>
@@ -236,6 +263,9 @@ const NoteDetails: React.FC = () => {
 
             </SideBar>
           }
+        <Container maxWidth={false} >
+          <ToastContainer position="top-center" />
+          <Center>
           <Toggle onClick={handleMenu}>  Filtros</Toggle>
           <Box>
             <Row>
@@ -299,16 +329,16 @@ const NoteDetails: React.FC = () => {
 
                 {
                 renderNumber === 0 ?
-                  indicatorsVehiclesOrDrivers.all_average_scores?.map(details => details.map(pointsVehicle => templateAllAverageScores(pointsVehicle) ))
+                  indicatorsVehiclesOrDrivers.all_average_scores?.map((details) => details.map(pointsVehicle => templateAllAverageScores(pointsVehicle) ))
                 :
-                  VehiclesOrDrivers.all_positions?.map(details => (
-                    (<InfoBoxContainer key={details.details[renderNumber].current_period * 2}>
+                  VehiclesOrDrivers.all_positions?.map((details,index) => (
+                    (<InfoBoxContainer key={index}>
                       <div>
                       <h4>{details.details[renderNumber].status}</h4>
                       <p>**{details.details[renderNumber].current_period}**</p>
                       <strong><i className={`fas fa-sort-${details.details[renderNumber].status} ${details.details[renderNumber].status === 'up' ? 'up': 'down'}`}></i> vs. periodo anterior</strong>
                       </div>
-                      {details?.details[renderNumber]?.subscores?.map(params =>templateSubScore(params))}
+                      {details?.details[renderNumber]?.subscores?.map((params) =>  templateSubScore(params) )}
                       </InfoBoxContainer>)
                   ))
                 }
@@ -320,15 +350,61 @@ const NoteDetails: React.FC = () => {
                   <p>&nbsp;</p>
                 </Indicators>
 
-            {indicatorsVehiclesOrDrivers.indicators?.map(indicator => templateDetailsIndicator(indicator) )}
+            {indicatorsVehiclesOrDrivers.indicators?.map((indicator) => templateDetailsIndicator(indicator) )}
             </LineFix>
 
             </Line>
 
-            <h5> RANKING GENERAL </h5>
-            <Table>
-              <DataGrid rows={[]} columns={[]} pageSize={5} />
-            </Table>
+            <Title> RANKING {names[renderNumber]} </Title>
+
+            <div>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Tipo</TableCell>
+                    <TableCell align="center">Consumo atual</TableCell>
+                    <TableCell align="center">Diferença</TableCell>
+                    <TableCell align="center">Periodo passado</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+
+                {
+                  renderNumber === 0 ?
+                  rowsIndicator?.map(row => row.map( (e,index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center">{e.score_type} </TableCell>
+                      <TableCell align="center">{e.current_period_grade} </TableCell>
+                      <TableCell align="center">
+                        {e.status === 'equal' ?
+                            <i className="fas fa-equals"></i> :
+                            <Icon> <i className={`fas fa-sort-${e.status} ${e.status === 'up' ? 'up': 'down'}`}></i> </Icon>
+                          }
+                      </TableCell>
+                      <TableCell align="center">{e.previous_period_grade} </TableCell>
+                    </TableRow>
+                  )))
+                  :
+                  rows?.map((e) => e.map((e,index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center">{e.score_type} </TableCell>
+                      <TableCell align="center">{e.current_period_grade} </TableCell>
+                      <TableCell align="center">
+                          {e.status === 'equal' ?
+                          <i className="fas fa-equals"></i> :
+                          <Icon> <i className={`fas fa-sort-${e.status} ${e.status === 'up' ? 'up': 'down'}`}></i> </Icon>
+                        }
+                         </TableCell>
+                      <TableCell align="center">{e.previous_period_grade} </TableCell>
+                    </TableRow>
+                  )))
+
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
+            </div>
           </Box>
         </Center>
       </Container>

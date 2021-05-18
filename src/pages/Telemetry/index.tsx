@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { FormControl, InputLabel, Select, TextField, Typography } from '@material-ui/core';
 import { ResponsiveContainer } from 'recharts';
-import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table,ButtonSearch, RowButton,FormContainerSelect } from '../../Styled';
+import { Box, BoxLeft, BoxRight, Center, Form, Row, SideBar, Toggle, Column, Table,ButtonSearch, RowButton,FormContainerSelect, Icon } from '../../Styled';
 import { Grafic, BoxGrafic, TextGrafic, MiddleBox, ContentGraphic, BoxHeader, Header, Main, ContainerChart } from './styles.telemetria';
 
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
@@ -170,10 +170,6 @@ const Telemetry: React.FC = () => {
   return (
     <>
       <Menu />
-      <Container maxWidth={false} style={{ boxShadow: '0px 0px 1px 2px white' }}>
-
-        <Center>
-        <ToastContainer position="top-center" />
           {visible &&
             (
               <SideBar>
@@ -252,6 +248,10 @@ const Telemetry: React.FC = () => {
               </SideBar>
             )
           }
+                <Container maxWidth={false} style={{ boxShadow: '0px 0px 1px 2px white' }}>
+
+<Center>
+<ToastContainer position="top-center" />
           <Toggle onClick={handleMenu}> <FaFilter /> Filtros</Toggle>
           {render === false && (
             <Box>
@@ -289,7 +289,10 @@ const Telemetry: React.FC = () => {
                       setBtnColorOneFalse(false);
                     }}>L/Hr</BTN>
 
-                    <p> <IoMdArrowDropup /> vs. periodo anterior </p>
+                    <p>
+                      <Icon> <i className={`fas fa-sort-${dataTelemetry.indicators_cmp_from_last_period.cmp_fuel_rate_lts_per_hrs}
+                      ${dataTelemetry.indicators_cmp_from_last_period.cmp_fuel_rate_lts_per_hrs === 'up' ? 'up': 'down'}`}></i> <span> vs. periodo anterior </span> </Icon>
+                    </p>
                   </section>
                 </BoxHeader>
 
@@ -315,7 +318,10 @@ const Telemetry: React.FC = () => {
                       setBtnColorTwoTrue(true);
                       setBtnColorTwoFalse(false);
                     }}>$</BTN>
-                    <p> <IoMdArrowDropup /> vs. periodo anterior </p>
+                    <p>
+                      <Icon> <i className={`fas fa-sort-${dataTelemetry.indicators_cmp_from_last_period.cmp_total_fuel_consumption_lts}
+                      ${dataTelemetry.indicators_cmp_from_last_period.cmp_total_fuel_consumption_lts === 'up' ? 'up': 'down'}`}></i> <span> vs. periodo anterior </span> </Icon>
+                    </p>
                   </section>
                 </BoxHeader>
 
@@ -325,7 +331,10 @@ const Telemetry: React.FC = () => {
                   <h4> {dataTelemetry.indicators_summary.total_distance_kms &&
                     dataTelemetry.indicators_summary.total_distance_kms.toFixed(2)} Km </h4>
 
-                  <p> <IoMdArrowDropup /> vs. periodo anterior </p>
+                   <p>
+                      <Icon> <i className={`fas fa-sort-${dataTelemetry.indicators_cmp_from_last_period.cmp_total_distance_kms}
+                      ${dataTelemetry.indicators_cmp_from_last_period.cmp_total_distance_kms === 'up' ? 'up': 'down'}`}></i> <span> vs. periodo anterior </span> </Icon>
+                    </p>
                 </BoxHeader>
               </Header>
 

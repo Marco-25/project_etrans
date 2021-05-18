@@ -5,7 +5,7 @@ flex-direction: row;
 `;
 
 export const MenuDesktop = styled.nav`
-z-index:99;
+z-index:100;
 position:absolute;
 display:flex;
 flex-direction: column;

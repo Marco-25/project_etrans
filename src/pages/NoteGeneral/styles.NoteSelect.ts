@@ -44,11 +44,6 @@ export const MiddleBoxNoteSelect = styled.div<IPropsBoxNoteSelect>`
   justify-content:center;
   align-items: center;
   font-size: 0.7em;
-
-   svg {
-    margin-right: 0.3em;
-    font-size: 1.5em;
-   }
  }
 
   @media screen and (max-width: 1024px) {

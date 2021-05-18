@@ -135,9 +135,10 @@ export const BoxHeader = styled.div<PropsColor>`
     align-items:center;
     font-size: 10px;
     text-align:center;
-    svg {
-      margin-right: 8px;
+    span {
+      font-size: 1.2em;
     }
+    padding-bottom: 0.4em;
   }
 
   section {

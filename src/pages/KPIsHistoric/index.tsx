@@ -9,8 +9,6 @@ import { IoMdInformationCircle } from 'react-icons/io';
 import { toast, ToastContainer } from 'react-toastify';
 import Menu from '../../components/Menu';
 import { IHorometer } from '../../interfaces/IHorometer';
-import { IOdoliter } from '../../interfaces/IOdoliter';
-import { IOdometer } from '../../interfaces/IOdometer';
 import { apiTelemetryKPI } from '../../services/api';
 import { Box, Center, Form, Row, SideBar, Toggle, Table, RowButton, ButtonSearch, FormContainerSelect } from '../../Styled';
 import { MiddleBoxKPI, TitleKPI, Header, ContainerKPI } from './styles.kpishistoric';
@@ -18,8 +16,6 @@ import { MiddleBoxKPI, TitleKPI, Header, ContainerKPI } from './styles.kpishisto
 const KPIsHistoric: React.FC = () => {
   const [visible, setVisible] = useState(true);
   const [horometer, setHorometer] = useState<IHorometer[]>([]);
-  const [odometer, setOdometer] = useState<IOdometer[]>([]);
-  const [odoliter, setOdoliter] = useState<IOdoliter[]>([]);
 
   const [conditionSearch, setConditionSearch] = useState(false);
 
@@ -53,17 +49,15 @@ const KPIsHistoric: React.FC = () => {
       toast.info("informe uma data de fim");
       return;
     }
-    console.log(odoliter);
-    console.log(odometer);
-    console.log(horometer);
-    apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res => setOdometer(res.data.measurements) );
+
+    apiTelemetryKPI.get(`/odometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res => console.log(res.data.measurements) );
     apiTelemetryKPI.get(`/horometer?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res =>  setHorometer(res.data.measurements));
-    apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res => setOdoliter(res.data.measurements));
+    apiTelemetryKPI.get(`/odoliter?imei=${imei}&from_timestamp=${dateInitial}&to_timestamp=${dateEnd}`).then(res => console.log(res.data.measurements));
     setConditionSearch(true);
     toast.success("Dados carregados!");
     setRows([]);
 
-  }, [dateInitial, dateEnd, imei, odometer,horometer,odoliter]);
+  }, [dateInitial, dateEnd, imei]);
 
   //table
   const columns = [
@@ -87,25 +81,9 @@ const KPIsHistoric: React.FC = () => {
     }
   });
 
-  // const rowOdometer = odometer?.map(odometer => {
-  //   return {
-  //     end_odometer_kms: odometer.end_odometer_kms && odometer.end_odometer_kms.toFixed(2),
-
-  //   }
-  // });
-
-  // const rowOdoliter = odoliter?.map(odoliter => {
-  //   return {
-  //     end_odoliter_lts: odoliter?.end_odoliter_lts && odoliter?.end_odoliter_lts.toFixed(2),
-  //   }
-  // });
-
   return (
     <>
       <Menu />
-      <Container maxWidth={false} >
-        <ToastContainer position="top-center" />
-        <Center>
           {visible &&
             <SideBar>
               <h4>REPORTE DE KPIS HISTÓRICO <IoMdInformationCircle /> </h4>
@@ -173,7 +151,12 @@ const KPIsHistoric: React.FC = () => {
 
             </SideBar>
           }
+
+      <Container maxWidth={false} >
+        <ToastContainer position="top-center" />
+        <Center>
           <Toggle onClick={handleMenu}> <FaFilter /> Filtros</Toggle>
+
           <Box>
             {!conditionSearch ? (
               <ContainerKPI>

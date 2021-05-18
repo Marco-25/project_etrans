@@ -42,6 +42,7 @@ export const LittleBox = styled.a<IPropsLittleBox>`
 `;
 
 export const Line = styled.div`
+
     margin-top: 1rem;
     width: 100%;
     height: 14.5rem;
@@ -80,6 +81,11 @@ export const InfoBoxContainer = styled.div<ISizeGeneral>`
   border-radius: 0.313em;
   display: flex;
   flex-direction:row;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 1024px) {
+    height:auto;
+  }
 
   @media screen and (max-width: 768px) {
     flex-direction:column;
@@ -105,13 +111,15 @@ export const InfoBoxContainer = styled.div<ISizeGeneral>`
     }
 
     @media screen and (max-width: 1024px) {
-    width: 33.3%;
-    margin-bottom: 0.25rem;
-
-    &:nth-child(1){
+      min-width: 100%;
       margin-left: 0;
-      height: 6.5rem;
-    }
+      margin-bottom: 0.25rem;
+
+      &:nth-child(1){
+        margin-left: 0;
+        width: 100%;
+        height: 6.5rem;
+      }
   }
 
   @media screen and (max-width: 768px) {
@@ -163,17 +171,18 @@ export const InfoBox = styled.div<ISizeGeneral>`
     align-items:center;
 
     i.up {
-      color: green;
+      color: #00e676;
       padding-right: 0.7em;
     }
     i.down {
-      color: red;
+      color: #ff1744;
       padding-right: 0.7em;
     }
   }
 `;
 
 export const Indicators = styled.div`
+border:1px solid red;
   width: 24.62%;
   height: 6.5rem;
   margin-left: 0.5%;
@@ -216,11 +225,11 @@ export const Indicators = styled.div`
     align-items:center;
 
     i.up {
-      color: green;
+      color: #00e676;
       padding-right: 0.7em;
     }
     i.down {
-      color: red;
+      color: #ff1744;
       padding-right: 0.7em;
     }
   }
@@ -253,18 +262,6 @@ export const InfoBoxIndicator = styled.div<ISizeGeneral>`
   &:nth-child(5) { background: #79a5b0;}
 
   @media screen and (max-width: 1024px) {
-    width: 19.6%;
-    margin-bottom: 0.25rem;
-
-    &:nth-child(1){
-      margin-left: 0;
-      position: relative;
-      height: 6.5rem;
-    }
-    &:nth-child(2){ margin-left: 0.5%; }
-  }
-
-  @media screen and (max-width: 768px) {
     width: 24.6%;
     height: 5.5rem;
     margin-bottom: 0.25rem;
@@ -283,18 +280,28 @@ export const InfoBoxIndicator = styled.div<ISizeGeneral>`
     width: 100%;
     margin-left: 0;
   }
-}
   strong {
     display:flex;
     align-items:center;
 
     i.up {
-      color: green;
+      color: #00e676;
       padding-right: 0.7em;
     }
     i.down {
-      color: red;
+      color: #ff1744;
       padding-right: 0.7em;
     }
-
+  }
 `;
+
+export const Title = styled.h5`
+  width:100%;
+  text-align:center;
+  font-size: 1.3em;
+  margin-top:1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: normal;
+`;
+
+

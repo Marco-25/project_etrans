@@ -29,7 +29,9 @@ https://api.copiloto.ai/scores/v1/general/drivers
 }
 /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
 
+
 #Page telemetria KPI
+
 Router gets
 https://api.copiloto.ai/kpi/v1/history/odometer?imei=867162026821918&from_timestamp=2021-04-30%2004:00:00&to_timestamp=2021-05-06%2003:59:59
 
@@ -40,9 +42,55 @@ https://api.copiloto.ai/kpi/v1/history/odoliter?imei=867162026821918&from_timest
 Route post ( sessão do usuario )
 https://api.raygun.io/events?apikey=uDpSCDTLl123TT9YqabeEA
 
-
-
-
-
+#Telemetry
+***POST***
+https://etrack-api.copiloto.ai/api/v1/indicator_summary/detailed_vehicle_report/indicators_by_imei/
+body {
+  from_timestamp: "2021-05-11 04:00:00",
+   to_timestamp: "2021-05-18 19:30:18",
+    imei: ["867162026821918"]
+    }
+------------------------------------------------------------------------------------------
+***GET***
+https://etrack-api.copiloto.ai/api/v2/dpf/histogram
+{
+  imei: 867162026821918
+  from_timestamp: 2021-05-11 04:00:00
+  to_timestamp: 2021-05-18 20:02:12
+}
+-----------------------------------------------------------------------------------------
+***POST***
+https://etrack-api.copiloto.ai/api/v1/events/chart_engine_temperature/
+{
+  from_timestamp: "2021-05-11 04:00:00",
+   to_timestamp: "2021-05-18 20:02:12",
+   imei: ["867162026821918"]
+}
+-----------------------------------------------------------------------------------------
+***POST***
+https://etrack-api.copiloto.ai/api/v1/events/chart_oil_pressure/
+{
+  from_timestamp: "2021-05-11 04:00:00",
+   to_timestamp: "2021-05-18 20:02:12",
+   imei: ["867162026821918"]
+}
+-----------------------------------------------------------------------------------------
+***POST***
+https://etrack-api.copiloto.ai/api/v1/events/chart_gas_pedal_percentage/
+{
+  from_timestamp: "2021-05-11 04:00:00",
+   to_timestamp: "2021-05-18 20:02:12",
+   imei: ["867162026821918"]
+}
+-----------------------------------------------------------------------------------------
+***POST***
+https://etrack-api.copiloto.ai/api/v1/events/time_tank_level_distance/
+{
+  from_timestamp: "2021-05-11 04:00:00",
+   to_timestamp: "2021-05-18 20:02:12",
+   imei: ["867162026821918"]
+}
+-----------------------------------------------------------------------------------------
+***POST***
 
 
