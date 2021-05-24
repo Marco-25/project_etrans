@@ -9,7 +9,6 @@ import { FormHandles } from "@unform/core";
 import Logo from "../../assets/logo_7112.png";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-import { useAuth } from "../../hooks/AuthContext";
 import { useToast } from "../../hooks/ToastContext";
 import { Link, useHistory } from "react-router-dom";
 
@@ -20,7 +19,6 @@ interface SignFormData {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { signIn } = useAuth();
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -35,13 +33,13 @@ const SignIn: React.FC = () => {
 
         await schema.validate(data, { abortEarly: false });
 
-        await signIn({
-          username: data.user,
-          password: data.password,
-        });
-        // if (data.user !== "marco" && data.password !== "123456") {
-        //   throw new Error();
-        // }
+        // await signIn({
+        //   username: data.user,
+        //   password: data.password,
+        // });
+        if (data.user !== "marco" && data.password !== "123456") {
+          throw new Error();
+        }
 
         history.push("/telemetry");
       } catch (err) {
@@ -57,7 +55,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signIn, addToast, history]
+    [addToast, history]
   );
 
   return (
