@@ -1,51 +1,53 @@
-import React, { FormEvent, InputHTMLAttributes, useCallback } from 'react';
-import { birthDate, cep, currency, cpf, cnpj, cell,phone } from './masks';
-
-import './styles.css';
+import { useField } from '@unform/core';
+import React, { InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react';
+import { FiAlertCircle } from 'react-icons/fi';
+import { IconBaseProps } from 'react-icons/lib';
+import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-    mask?: "cep" | "currency" | "birthDate" | "cpf" | "cnpj" | "cell" | "phone",
-    prefix?: string;
-    label?: string;
+  name: string;
+  icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<InputProps> = ({ mask, prefix, label, ...props }) => {
+const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+  const { fieldName, defaultValue, error, registerField } = useField(name);
 
-    const handleKeyUp = useCallback((event: FormEvent<HTMLInputElement>) => {
-        switch (mask) {
-            case "cep":
-                cep(event);
-                break;
-            case "currency":
-                currency(event);
-                break
-            case "birthDate":
-                birthDate(event);
-                break;
-            case "cpf":
-                cpf(event);
-                break;
-            case "cnpj":
-                cnpj(event);
-                break;
-            case "cell":
-                cell(event);
-                break;
-            case "phone":
-                phone(event);
-                break;
-        }
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
 
+  const handleInputBluer = useCallback(() => {
+    setIsFocused(false);
+    setIsFilled(!!inputRef.current?.value);
+  }, []);
 
-    }, [mask]);
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value',
+    });
+  }, [fieldName, registerField]);
 
-    return (
-        <div className="inputGroup prefix">
-            <label className="label"> {label && label} </label>
-            {prefix && <span className="prefixSpan">{prefix}</span>}
-            <input className="input" {...props} onKeyUp={handleKeyUp} />
-        </div>
-    );
+  return (
+    <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused} >
+      {Icon && <Icon size={20} />}
+      <input
+        onFocus={handleInputFocus}
+        onBlur={handleInputBluer}
+        defaultValue={defaultValue}
+        ref={inputRef}
+        {...rest} />
+      {error &&
+        <Error title={error}>
+          <FiAlertCircle size={20} />
+        </Error>
+      }
+    </Container>
+  );
 }
 
 export default Input;

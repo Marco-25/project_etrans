@@ -1,56 +1,33 @@
-/*
-// average_speed_kmh = velocidad promedio
+// model: Modelo  -1
+// vehicle_use: Uso 2
+// description_short: Tipo  - 3
+// engine: Motor 4
 
-// braking_analysis = vehiculos en operacion
+// power: Potencia 5
 
-// efficient_driving_time_pctg = conduccion ***
+// torque: Torque 6
+// engine_displacement: Cilindrada (CC) 7
+// gearbox: Caja 8
+// transmission_type: Tipo Transmisión 9
+// payload: Carga Util (kg) 10
+// emission_norm: Norma Emisión 11
+// horometer: Horometro 12
 
-// engine_brake_usage_distance_pctg = freno sin desgaste
+// name_api = name_screen = order
+// (obs: onde tiver * tirar da requisição)
 
-// fuel_rate_kms_per_lts = rendimento Km/L - ok
+// description_long: Modelo -repet 11
+// vehicle_manufacturer: Marca 12
+// traction: Tracción 13
+// vehicle_engine_manufacturer: Marca Motor  14
+// power_unit: Medida Potencia 15
+// torque_unit: Torque Medida 16
+// tonnage: Tonelaje 17
+// transmission: Transmisión 18
+// axis_capacity: Capacidad De Ejes (ton) 19
+// chassis_length: Largo Carrozable (mm) 20
+// odometer: Odómetro 21
 
-// idle_time_pctg = ralenti
+// device_imei: "867162026821918" **
 
-// inefficient_driving_time_pctg = no rentable en conduccion
-
-// service_and_engine_brake_usage_distance_pctg = frenado mixto
-
-// service_brake_usage_distance_pctg = solo freno de servicio
-
-// stopped_acceleration_time_pctg = aceleracio en vacio
-
-// total_distance_kms = distancia recorrida
-
-// total_fuel_consumption_lts = combustible (L)
-
-// fuel_rate_lts_per_hrs = rendimento (L/Hr) - ok
-
-// conbustible $ *tem que fazer um calculo
-
-// total_fuel_consumption_lts = consumo total(L) - ok
-
-// total_time_hrs = horas de operacion(Hr) - ok
-
-// idle_time_pctg = tempo em relenti(%) - ok
-
-// inefficient_driving_time_pctg = tiempo no rentable en conducion (%)
-
-// stopped_acceleration_time_pctg = tiempo en aceleracion vacio(%) - ok
-
-// average_speed_kmh = velocidad promedio - ok
-
-// engine_brake_usage_distance_pctg = distancia uso freno sin desgate(%) - ok
-
-// service_brake_usage_distance_pctg = distancia solo uso freno de servicio(%) - ok
-
-// qty_trips = numero de viajes - ok
-
-
-//grafico de velocidade (KM/H)
-*/
-
-// <li>
-  // <p> 1 </p> idVehiclesOrDrivers
-  // <strong> Roberto backdorf</strong> nameVehicleOrDriver
-  // <p>7.2 <IoMdArrowDropup size={18} /> </p> points|
-// </li>
+// suspension: "AIRE" - inert or not?

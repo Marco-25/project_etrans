@@ -45,11 +45,11 @@ https://api.raygun.io/events?apikey=uDpSCDTLl123TT9YqabeEA
 #Telemetry
 ***POST***
 https://etrack-api.copiloto.ai/api/v1/indicator_summary/detailed_vehicle_report/indicators_by_imei/
-body {
+{
   from_timestamp: "2021-05-11 04:00:00",
-   to_timestamp: "2021-05-18 19:30:18",
-    imei: ["867162026821918"]
-    }
+  to_timestamp: "2021-05-18 19:30:18",
+  imei: ["867162026821918"]
+}
 ------------------------------------------------------------------------------------------
 ***GET***
 https://etrack-api.copiloto.ai/api/v2/dpf/histogram
@@ -91,6 +91,10 @@ https://etrack-api.copiloto.ai/api/v1/events/time_tank_level_distance/
    imei: ["867162026821918"]
 }
 -----------------------------------------------------------------------------------------
-***POST***
+***GET***
+https://etrack-api.copiloto.ai/api/v1/events/chart_rpm/867162026821918/2021-05-12%2004:00:00/2021-05-19%2012:43:33
+https://etrack-api.copiloto.ai/api/v1/events/chart_speed/867162026821918/2021-05-12%2004:00:00/2021-05-19%2012:43:33
 
 
+
+    "server": "json-server --watch db.json --port 3333"
