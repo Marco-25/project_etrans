@@ -97,4 +97,4 @@ https://etrack-api.copiloto.ai/api/v1/events/chart_speed/867162026821918/2021-05
 
 
 
-    "server": "json-server --watch db.json --port 3333"
+    "server": "json-server --watch db.json"
