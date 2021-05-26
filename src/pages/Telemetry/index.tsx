@@ -102,7 +102,7 @@ const Telemetry: React.FC = () => {
   const [boxFuel, setBoxFuel] = useState(false);
   const [boxVehicle, setBoxVehicle] = useState(false);
 
-  const graphic = true;
+  const [graphic, setGraphic] = useState(false);
 
   const data2 = [
     {
@@ -242,6 +242,7 @@ const Telemetry: React.FC = () => {
       try {
         e.preventDefault();
         setLoading(true);
+        setGraphic(true);
 
         if (!imei) {
           toast.warning("Selecione um veiculo");
