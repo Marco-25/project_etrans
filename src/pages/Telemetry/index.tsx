@@ -73,6 +73,7 @@ import { ButtonBox, Content, ContentFuel } from "./styles";
 import { FaFilter, FaPause } from "react-icons/fa";
 import { IDetailsVehicle } from "../../interfaces/IDetailsVehicle";
 import ButtonSearch from "../../components/ButtonSearch";
+import { colors } from "../../Styled/colors";
 
 const Telemetry: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -242,7 +243,6 @@ const Telemetry: React.FC = () => {
       try {
         e.preventDefault();
         setLoading(true);
-        setGraphic(true);
 
         if (!imei) {
           toast.warning("Selecione um veiculo");
@@ -273,13 +273,13 @@ const Telemetry: React.FC = () => {
 
         setDataTelemetry(res.data);
         setDetailsVehicle(resp.data[4]);
-        console.log(resp.data[4]);
 
         toast.success("Dados carregados!");
       } catch (error) {
         toast.error("Ocorreu um erro ao buscar os dados, tente novamente.");
       } finally {
         setLoading(false);
+        setGraphic(true);
       }
     },
     [dateInitial, dateEnd, imei]
@@ -733,10 +733,10 @@ const Telemetry: React.FC = () => {
                             },
                             pieHole: 0.4,
                             colors: [
-                              "#00b050",
-                              "#276f8b",
-                              "#e60000",
-                              "#f1c34e",
+                              colors.green,
+                              colors.middleBlue,
+                              colors.red,
+                              colors.yellow,
                             ],
                           }}
                         />
@@ -788,11 +788,11 @@ const Telemetry: React.FC = () => {
                             left: 15,
                           }}
                         >
-                          <CartesianGrid stroke="#f5f5f5" />
+                          <CartesianGrid stroke={colors.lightgray} />
                           <XAxis dataKey="name" scale="band" />
                           <YAxis />
                           <Tooltip />
-                          <Bar dataKey="pv" barSize={20} fill="#413ea0" />
+                          <Bar dataKey="pv" barSize={20} fill={colors.purple} />
                         </ComposedChart>
                       </ResponsiveContainer>
                     </BoxGrafic>

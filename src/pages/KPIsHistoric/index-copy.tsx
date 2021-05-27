@@ -5,7 +5,15 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import {v4 as uuid} from 'uuid';
+
+import { withStyles, Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { CSVLink } from "react-csv";
@@ -36,7 +44,6 @@ import ButtonSearch from "../../components/ButtonSearch";
 import { IOdoliter } from "../../interfaces/IOdoliter";
 import { IOdometer } from "../../interfaces/IOdometer";
 
-
 const KPIsHistoric: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,6 +58,7 @@ const KPIsHistoric: React.FC = () => {
   const [dateInitial, setDateInitial] = useState("");
   const [dateEnd, setDateEnd] = useState("");
 
+  const [rows, setRows] = useState<any[]>([]);
 
   const handleMenu = useCallback(async () => {
     setVisible(!visible);
@@ -63,10 +71,37 @@ const KPIsHistoric: React.FC = () => {
     );
   }, []);
 
+  function createData(date: string, horometro: number, odometro: number, odolitro: number) {
+    return { date, horometro, odometro, odolitro };
+  }
 
-function subtract (a:number,b:number) {
-  return a - b
-}
+  const row = [
+    createData('Frozen yoghurt', 159, 6.0, 24)
+  ]
+
+  const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    body: {
+      fontSize: 14,
+    },
+  }),
+)(TableCell);
+
+const StyledTableRow = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+  }),
+)(TableRow);
+
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -105,24 +140,13 @@ function subtract (a:number,b:number) {
 
         toast.success("Dados carregados!");
 
-
-
-        const seila =horometer.map((horometer,index) => {
-          return {
-            "id": uuid(),
-            "date": horometer?.date_time,
-            "horometer": horometer.operating_time_hrs,
-            "odometer": odometer[index].end_odometer_kms,
-            "odoliter": odoliter[index].end_odoliter_lts,
-            "hour_operation": subtract(horometer.operating_time_hrs,horometer.operating_time_hrs),
-            "travelled_distance": subtract( odometer[index].end_odometer_kms, odometer[index + 1]?.end_odometer_kms),
-            "consumed_liters": subtract( odoliter[index].end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts),
-            "carbon": subtract( odoliter[index].end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * 2.471
-          }
+        //@ts-ignore
+        const seila = horometer.map(e => {
+          return(
+            e.operating_time_hrs
+          )
         })
-
         console.log(seila);
-
 
       } catch (error) {
         toast.error("Ocorreu um erro, tente novamente!");
@@ -130,9 +154,21 @@ function subtract (a:number,b:number) {
         setLoading(false);
       }
     },
-    [dateInitial, dateEnd, imei,horometer,odoliter,odometer]
+    [dateInitial, dateEnd, imei]
   );
 
+  //table
+  const columns = [
+    { field: "id", headerName: "ID", width: 120 },
+    { field: "date_time", headerName: "FECHA", width: 220 }, //horometer
+    { field: "operating_time_hrs", headerName: "HORÓMETRO", width: 250 }, //horometer
+    { field: "end_odometer_kms", headerName: "ODÓMETRO", width: 250 }, // odometer
+    { field: "end_odoliter_lts", headerName: "ODOLITRO", width: 240 }, // odoliter
+    // { field: 'total_time_hrs', headerName: 'HORAS EN OPERACIÓN (H)', width: 250 },
+    // { field: 'idle_time_pctg', headerName: 'DISTANCIA RECORRIDA (KM)', width: 250 },
+    // { field: 'stopped_acceleration_time_pctg', headerName: 'LITROS CONSUMIDOS (L)', width: 230 },
+    // { field: 'average_speed_kmh', headerName: 'HUELLA DE CARBONO (KGCO2)', width: 280 },
+  ];
 
   return (
     <>
@@ -274,7 +310,29 @@ function subtract (a:number,b:number) {
                   </MiddleBoxKPI>
                 </Header>
 
-
+                <TableContainer component={Paper}>
+                <Table aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell align="center">date</StyledTableCell>
+                      <StyledTableCell align="center">horometro</StyledTableCell>
+                      <StyledTableCell align="center">odometro</StyledTableCell>
+                      <StyledTableCell align="center">odolitro</StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {horometer.map((row) => (
+                      <StyledTableRow key={row.date_time}>
+                        <StyledTableCell align="center">{row.date_time}</StyledTableCell>
+                        <StyledTableCell align="center">{row?.operating_time_hrs.toFixed(2)}</StyledTableCell>
+                        {odometer.map(e => (
+                           <StyledTableCell align="center">{e?.end_odometer_kms.toFixed(2)}</StyledTableCell>
+                        ))}
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
                 <br />
                 <RowButton align="center">
                   <ButtonSearch>
