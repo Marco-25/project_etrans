@@ -6,6 +6,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import {v4 as uuid} from 'uuid';
+import { DataGrid } from '@material-ui/data-grid';
 
 import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { CSVLink } from "react-csv";
@@ -36,7 +37,6 @@ import ButtonSearch from "../../components/ButtonSearch";
 import { IOdoliter } from "../../interfaces/IOdoliter";
 import { IOdometer } from "../../interfaces/IOdometer";
 
-
 const KPIsHistoric: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,6 @@ const KPIsHistoric: React.FC = () => {
   const [dateInitial, setDateInitial] = useState("");
   const [dateEnd, setDateEnd] = useState("");
 
-
   const handleMenu = useCallback(async () => {
     setVisible(!visible);
   }, [visible]);
@@ -63,10 +62,10 @@ const KPIsHistoric: React.FC = () => {
     );
   }, []);
 
-
-function subtract (a:number,b:number) {
+const subtract = useCallback((a:number,b:number) => {
   return a - b
-}
+},[]);
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -105,24 +104,13 @@ function subtract (a:number,b:number) {
 
         toast.success("Dados carregados!");
 
-
-
-        const seila =horometer.map((horometer,index) => {
-          return {
-            "id": uuid(),
-            "date": horometer?.date_time,
-            "horometer": horometer.operating_time_hrs,
-            "odometer": odometer[index].end_odometer_kms,
-            "odoliter": odoliter[index].end_odoliter_lts,
-            "hour_operation": subtract(horometer.operating_time_hrs,horometer.operating_time_hrs),
-            "travelled_distance": subtract( odometer[index].end_odometer_kms, odometer[index + 1]?.end_odometer_kms),
-            "consumed_liters": subtract( odoliter[index].end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts),
-            "carbon": subtract( odoliter[index].end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * 2.471
-          }
+        //@ts-ignore
+        const seila = horometer.map(e => {
+          return(
+            e.operating_time_hrs
+          )
         })
-
         console.log(seila);
-
 
       } catch (error) {
         toast.error("Ocorreu um erro, tente novamente!");
@@ -130,9 +118,36 @@ function subtract (a:number,b:number) {
         setLoading(false);
       }
     },
-    [dateInitial, dateEnd, imei,horometer,odoliter,odometer]
+    [dateInitial, dateEnd, imei]
   );
 
+  //table
+  const columns = [
+    { field: "id", headerName: "ID", width: 120 },
+    { field: "date", headerName: "FECHA", width: 220 },
+    { field: "horometer", headerName: "HORÓMETRO", width: 200 },
+    { field: "odometer", headerName: "ODÓMETRO", width: 200 },
+    { field: "odoliter", headerName: "ODOLITRO", width: 200 },
+    { field: 'hour_operation', headerName: 'HORAS EN OPERACIÓN (H)', width: 250 },
+    { field: 'travelled_distance', headerName: 'DISTANCIA RECORRIDA (KM)', width: 250 },
+    { field: 'consumed_liters', headerName: 'LITROS CONSUMIDOS (L)', width: 230 },
+    { field: 'carbon', headerName: 'HUELLA DE CARBONO (KGCO2)', width: 280 },
+  ];
+
+
+  const rows = horometer.map((horometer,index) => {
+    return {
+      "id": uuid(),
+      "date": horometer?.date_time,
+      "horometer": horometer?.operating_time_hrs.toFixed(2),
+      "odometer": odometer[index]?.end_odometer_kms.toFixed(2),
+      "odoliter": odoliter[index]?.end_odoliter_lts.toFixed(2),
+      "hour_operation": subtract(horometer?.operating_time_hrs,horometer?.operating_time_hrs).toFixed(2),
+      "travelled_distance": (subtract( odometer[index]?.end_odometer_kms, odometer[index + 1]?.end_odometer_kms) * -1).toFixed(2),
+      "consumed_liters": (subtract( odoliter[index]?.end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * -1).toFixed(2),
+      "carbon": (subtract( odoliter[index]?.end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * 2.471 * -1).toFixed(2)
+    }
+  })
 
   return (
     <>
@@ -273,7 +288,7 @@ function subtract (a:number,b:number) {
                     <h4> Huella de Carbono </h4>
                   </MiddleBoxKPI>
                 </Header>
-
+                <DataGrid rows={rows} columns={columns} pageSize={5} />
 
                 <br />
                 <RowButton align="center">
