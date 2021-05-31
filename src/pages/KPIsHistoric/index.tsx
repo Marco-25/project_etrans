@@ -104,14 +104,6 @@ const subtract = useCallback((a:number,b:number) => {
 
         toast.success("Dados carregados!");
 
-        //@ts-ignore
-        const seila = horometer.map(e => {
-          return(
-            e.operating_time_hrs
-          )
-        })
-        console.log(seila);
-
       } catch (error) {
         toast.error("Ocorreu um erro, tente novamente!");
       } finally {
