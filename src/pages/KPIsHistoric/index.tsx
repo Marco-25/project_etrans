@@ -131,13 +131,13 @@ const subtract = useCallback((a:number,b:number) => {
     return {
       "id": uuid(),
       "date": horometer?.date_time,
-      "horometer": horometer?.operating_time_hrs.toFixed(2),
-      "odometer": odometer[index]?.end_odometer_kms.toFixed(2),
-      "odoliter": odoliter[index]?.end_odoliter_lts.toFixed(2),
-      "hour_operation": subtract(horometer?.operating_time_hrs,horometer?.operating_time_hrs).toFixed(2),
-      "travelled_distance": (subtract( odometer[index]?.end_odometer_kms, odometer[index + 1]?.end_odometer_kms) * -1).toFixed(2),
-      "consumed_liters": (subtract( odoliter[index]?.end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * -1).toFixed(2),
-      "carbon": (subtract( odoliter[index]?.end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * 2.471 * -1).toFixed(2)
+      "horometer": horometer?.operating_time_hrs?.toFixed(2),
+      "odometer": odometer[index]?.end_odometer_kms?.toFixed(2),
+      "odoliter": odoliter[index]?.end_odoliter_lts?.toFixed(2),
+      "hour_operation": subtract(horometer?.operating_time_hrs,horometer?.operating_time_hrs)?.toFixed(2),
+      "travelled_distance": (subtract( odometer[index]?.end_odometer_kms, odometer[index + 1]?.end_odometer_kms) * -1)?.toFixed(2),
+      "consumed_liters": (subtract( odoliter[index]?.end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * -1)?.toFixed(2),
+      "carbon": (subtract( odoliter[index]?.end_odoliter_lts, odoliter[index + 1]?.end_odoliter_lts) * 2.471 * -1)?.toFixed(2)
     }
   })
 
